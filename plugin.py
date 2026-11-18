@@ -170,6 +170,22 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
             defaults["accent"], defaults["radius"], defaults["blur"],
         )
 
+
+    def _uninstall_fonts(self) -> None:
+        """卸载时清理拷进 dist 的字体，只动本插件自己的目录。"""
+
+        index = self._dist_index()
+        target = index.parent / "fonts" / "misans"
+        if not target.is_dir():
+            return
+        for item in target.iterdir():
+            if item.is_file() and item.suffix in {".woff2", ".css"}:
+                item.unlink(missing_ok=True)
+        try:
+            target.rmdir()
+        except OSError:
+            pass
+
     def _remove(self) -> bool:
         index = self._dist_index()
         if not index.is_file():
@@ -177,8 +193,10 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
         html = index.read_text(encoding="utf-8")
         cleaned = FONT_LINK_RE.sub("", SCRIPT_RE.sub("", STYLE_RE.sub("", html)))
         if cleaned == html:
+            self._uninstall_fonts()
             return False
         index.write_text(cleaned, encoding="utf-8")
+        self._uninstall_fonts()
         return True
 
 
