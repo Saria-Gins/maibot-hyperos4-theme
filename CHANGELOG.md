@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.1.3
+
+- 全局字体覆盖：主题内所有元素统一使用内置 MiSans，等宽场景（pre/code/kbd/.font-mono）保留等宽字体
+- 字体栈把内置 MiSans 提到首位，避免因未安装 MiSans VF 而回退
+
 ## 6.1.2
 
 - 卸载时清理 dist/fonts/misans/ 下本插件的字体与 CSS，仅删除自有目录，不留残留

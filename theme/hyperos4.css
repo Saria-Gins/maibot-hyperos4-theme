@@ -340,7 +340,7 @@ html[data-hyperos4="on"] [class*="rounded-2xl"][class*="bg-primary"] {
 
 html[data-hyperos4="on"] {
   /* 字体：MiSans 优先，字重与行高按 HyperOS 设定 */
-  --typography-font-family-base: "MiSans VF", "MiSans", "MiSans Latin", "HarmonyOS Sans SC",
+  --typography-font-family-base: "MiSans", "MiSans VF", "MiSans Latin", "HarmonyOS Sans SC",
     "PingFang SC", "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif !important;
   --typography-font-family-code: "MiSans Mono", "JetBrains Mono", "Cascadia Mono", Consolas, monospace !important;
 
@@ -598,6 +598,24 @@ html[data-hyperos4="on"] .recharts-bar-rectangle rect {
   rx: 4px;
   ry: 4px;
 }
+
+
+/* 全局字体覆盖：主题内所有文字统一走 MiSans，等宽场景保留等宽字体 */
+html[data-hyperos4="on"] body,
+html[data-hyperos4="on"] body :not(pre):not(code):not(kbd):not(samp):not(.font-mono) {
+  font-family: var(--typography-font-family-base) !important;
+}
+
+html[data-hyperos4="on"] pre,
+html[data-hyperos4="on"] code,
+html[data-hyperos4="on"] kbd,
+html[data-hyperos4="on"] samp,
+html[data-hyperos4="on"] .font-mono,
+html[data-hyperos4="on"] textarea[class*="font-mono"],
+html[data-hyperos4="on"] input[class*="font-mono"] {
+  font-family: var(--typography-font-family-code) !important;
+}
+
 /* —— 外观页里的 HyperOS 面板 —— */
 #hyperos4-panel {
   border-radius: var(--visual-radius-lg);
