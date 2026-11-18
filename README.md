@@ -95,11 +95,23 @@ git clone https://github.com/Saria-Gins/maibot-hyperos4-theme.git local_dps_hype
 
 ---
 
-## 关于「悬浮底栏」的额外说明
+## 关于「悬浮底栏」的实现
 
-底栏不是纯 CSS 实现的，它依赖 dashboard 源码里的三个小改动。市场安装的版本**只带样式与字体**，底栏会退回侧栏入口（外观其余部分正常）。
+底栏有两种运行方式，插件会自动选择：
 
-想让底栏生效，需要对 dashboard 打补丁并重新构建：
+| 环境 | 行为 |
+|---|---|
+| 官方 dashboard | **兼容模式**：插件自建底栏，隐藏侧栏入口网格，会话列表保持完整 |
+| 打过补丁的 dashboard | **原生模式**：底栏由 dashboard 源码渲染，与侧栏共用路由与激活态 |
+
+也就是说，**从市场安装后底栏开箱可用**，不需要你改任何前端代码。
+
+兼容模式与原生模式的差异：
+
+- 兼容模式点击底栏会走一次 SPA 内的 history 跳转（页面不整刷）
+- 原生模式的激活态样式更贴合 dashboard 内部路由
+
+如果你自己维护 dashboard 源码，想要原生模式，需要三处改动：
 
 1. 新增 `dashboard/src/lib/use-hyperos-theme.ts`：读取 `<html data-hyperos4="on">` 与 `data-hyperos4-dock` 的 hook
 2. `ObservationSidebar.tsx`：HyperOS 底栏模式下不渲染标题行，并给导航 `<ul>` 打 `data-hyperos4-dock="true"`
@@ -114,9 +126,7 @@ node node_modules/vite/bin/vite.js build
 # 产物在 dashboard/dist，替换到 maibot_dashboard 包的 dist 目录
 ```
 
-> dashboard 升级后需要重新构建，否则底栏消失（样式部分仍生效）。
-
----
+> dashboard 升级后需要重新构建，否则会回落到兼容模式（底栏仍可用，只是由插件渲染）。
 
 ## 常见问题
 
