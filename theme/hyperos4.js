@@ -75,14 +75,14 @@
   /* 先落属性，保证 dashboard 首帧渲染就能读到 HyperOS 模式 */
   try {
     document.documentElement.dataset.hyperos4 =
-      (localStorage.getItem(ACTIVE_KEY) === '0' || settings.enabled === false) ? 'off' : 'on'
+      (localStorage.getItem(ACTIVE_KEY) === '1' && settings.enabled !== false) ? 'on' : 'off'
   } catch (error) {
     document.documentElement.dataset.hyperos4 = 'on'
   }
 
   function active() {
-    var raw = localStorage.getItem(ACTIVE_KEY)
-    return raw === null ? settings.enabled : raw === '1'
+    /* 默认 opt-in：只有用户显式选中 HyperOS 4 卡片后才生效 */
+    return localStorage.getItem(ACTIVE_KEY) === '1' && settings.enabled !== false
   }
 
   function setActive(value) {
