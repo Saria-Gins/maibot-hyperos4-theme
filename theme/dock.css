@@ -1,0 +1,166 @@
+/* 侧栏不能成为 fixed 子元素的包含块，否则底栏会相对侧栏定位 */
+html[data-hyperos4="on"] aside[data-observation-sidebar] {
+  backdrop-filter: none !important;
+  filter: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  contain: none !important;
+}
+
+/* HyperOS 4 底部悬浮底栏
+ *
+ * 由 dashboard 源码在 HyperOS 模式下给 nav ul 打 data-hyperos4-dock="true"，
+ * 这里只负责把它固定到底部，不再搬动 DOM。
+ */
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: 18px !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 2px !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  grid-template-rows: none !important;
+  background: hsl(var(--color-card) / var(--hyperos4-dock-alpha, 0.38)) !important;
+  backdrop-filter: blur(var(--hyperos4-dock-blur, 24px)) saturate(1.8) !important;
+  border: 1px solid hsl(var(--color-border) / 0.55) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 24px 60px -28px rgba(16, 18, 27, 0.45), 0 6px 18px -12px rgba(16, 18, 27, 0.3) !important;
+  z-index: 70 !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] > li {
+  flex: 0 0 auto !important;
+  width: auto !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] a {
+  width: 64px !important;
+  height: 56px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding: 6px 4px !important;
+  border-radius: 18px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] a:hover {
+  background: hsl(var(--color-accent)) !important;
+  transform: translateY(-2px) !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] a[data-active="true"] {
+  background-image: var(--color-primary-gradient) !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  box-shadow: 0 10px 22px -12px hsl(var(--color-primary) / 0.9) !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] a[data-active="true"] * {
+  color: hsl(var(--color-primary-foreground)) !important;
+}
+
+/* 底栏启用后给主内容留出空间 */
+html[data-hyperos4="on"] main {
+  padding-bottom: 108px !important;
+}
+
+/* 底栏开启时，设置区本身不再占位（nav 已被固定在底部） */
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar] > section[data-observation-settings="true"] {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+
+/* 折叠时把会话列表拉满，顶部不再留空 */
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-conversations] {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] > section {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+}
+
+
+/* 侧栏里的装饰性细线（MAIBOT 与「所有对话」之间那两条） */
+html[data-hyperos4="on"] aside[data-observation-sidebar] [data-observation-rule="true"] {
+  display: none !important;
+}
+
+/* 折叠态：头像列表样式，只留头像，隐藏文字 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] {
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] > * {
+  width: 44px !important;
+  justify-content: center !important;
+}
+
+/* 折叠列表里只隐藏文字标签，头像保留 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] [data-observation-key-label] {
+  display: none !important;
+}
+
+
+/* 折叠态头像列表：给足高度与滚动 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] nav[data-observation-conversation-list] {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] {
+  overflow: visible !important;
+}
+
+/* 折叠时不要竖排小节标题 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] [data-observation-list-section],
+html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] h3 {
+  display: none !important;
+}
+
+
+/* 底栏关闭：入口留在侧栏，套用同一套 HyperOS 药丸样式 */
+html[data-hyperos4="on"]:not([data-hyperos4-dock="on"]) aside[data-observation-sidebar] nav ul[data-observation-keys] a[data-observation-key] {
+  border-radius: calc(var(--visual-radius-md) * 0.78) !important;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+}
+
+html[data-hyperos4="on"]:not([data-hyperos4-dock="on"]) aside[data-observation-sidebar] nav ul[data-observation-keys] a[data-observation-key]:hover {
+  background: hsl(var(--color-accent)) !important;
+}
+
+html[data-hyperos4="on"]:not([data-hyperos4-dock="on"]) aside[data-observation-sidebar] nav ul[data-observation-keys] a[data-observation-key][data-active="true"] {
+  background-image: var(--color-primary-gradient) !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  box-shadow: 0 10px 22px -12px hsl(var(--color-primary) / 0.9) !important;
+}
+
+html[data-hyperos4="on"]:not([data-hyperos4-dock="on"]) aside[data-observation-sidebar] nav ul[data-observation-keys] a[data-active="true"] * {
+  color: hsl(var(--color-primary-foreground)) !important;
+}
+

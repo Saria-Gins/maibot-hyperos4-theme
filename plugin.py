@@ -1,0 +1,188 @@
+# -*- coding: utf-8 -*-
+"""HyperOS 4 风格主题：往 dashboard 的 index.html 注入样式与设置面板脚本。
+
+dashboard 的自定义 CSS 存在浏览器 localStorage，插件页面又是 iframe，服务端拿不到主界面 DOM。
+这里只做两件事：注入一段受控样式块（全局生效）+ 一段脚本（把设置面板挂进「设置 → 外观」）。
+不改资产文件名、不改 JS 构建产物，dashboard 升级后重新注入即可。
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import re
+from pathlib import Path
+from typing import Any, Dict
+
+from maibot_sdk import CONFIG_RELOAD_SCOPE_SELF, MaiBotPlugin
+
+from .config import HyperOS4ThemeConfig
+
+logger = logging.getLogger(__name__)
+
+STYLE_ID = "hyperos4-theme-style"
+SCRIPT_ID = "hyperos4-theme-script"
+FONT_LINK_ID = "hyperos4-fonts"
+FONTS_SRC = Path(__file__).parent / "fonts"
+STYLE_RE = re.compile(rf"\n?<style id=\"{STYLE_ID}\"[^>]*>.*?</style>", re.S)
+SCRIPT_RE = re.compile(rf"\n?<script id=\"{SCRIPT_ID}\"[^>]*>.*?</script>", re.S)
+FONT_LINK_RE = re.compile(rf"\n?<link id=\"{FONT_LINK_ID}\"[^>]*>")
+
+ASSET_DIR = Path(__file__).parent / "theme"
+CSS_FILE = ASSET_DIR / "hyperos4.css"
+DOCK_CSS_FILE = ASSET_DIR / "dock.css"
+JS_FILE = ASSET_DIR / "hyperos4.js"
+
+ACCENTS: Dict[str, tuple[int, int]] = {
+    "orange": (24, 14),
+    "blue": (214, 200),
+    "green": (148, 168),
+    "purple": (268, 292),
+    "graphite": (220, 232),
+}
+
+
+class HyperOS4ThemePlugin(MaiBotPlugin):
+    """管理 index.html 里的主题样式块与面板脚本。"""
+
+    config_model = HyperOS4ThemeConfig
+
+    async def on_load(self) -> None:
+        self._apply()
+
+    async def on_unload(self) -> None:
+        removed = self._remove()
+        logger.info("[HyperOS4] 卸载完成，移除注入=%s；请刷新 WebUI", removed)
+
+    async def on_config_update(self, scope: str, config_data: Dict[str, Any], version: str) -> None:
+        del config_data, version
+        if scope == CONFIG_RELOAD_SCOPE_SELF:
+            self._apply()
+
+    # ------------------------------------------------------------------ 内部
+
+    def _dist_index(self) -> Path:
+        from maibot_dashboard import get_dist_path
+
+        return Path(get_dist_path()).resolve() / "index.html"
+
+    def _defaults(self) -> Dict[str, Any]:
+        theme = self.config.theme
+        accent = theme.accent.strip().lower()
+        return {
+            "enabled": bool(self.config.plugin.enabled),
+            "accent": accent if accent in ACCENTS else "blue",
+            "dockEnabled": bool(self.config.theme.dock_enabled),
+            "dockGlass": bool(self.config.theme.dock_glass),
+            "dockBlur": max(0, min(48, int(self.config.theme.dock_blur))),
+            "radius": max(8, min(48, int(theme.radius_px))),
+            "blur": max(0, min(48, int(theme.blur_px))),
+            "tint": max(0, min(100, int(theme.tint_strength))),
+        }
+
+    def _build_style(self, defaults: Dict[str, Any]) -> str:
+        """样式块：先给变量默认值，再附完整皮肤（无 JS 时也能生效）。"""
+
+        hue, hue2 = ACCENTS[defaults["accent"]]
+        preamble = (
+            "html{"
+            f"--hyperos4-accent-h:{hue};"
+            f"--hyperos4-accent-h2:{hue2};"
+            f"--hyperos4-radius:{defaults['radius']}px;"
+            f"--hyperos4-blur:{defaults['blur']}px;"
+            f"--hyperos4-tint:{defaults['tint'] / 100};"
+            f"--hyperos4-dock-blur:{defaults['dockBlur']}px;"
+            f"--hyperos4-dock-alpha:{0.38 if defaults['dockGlass'] else 1};"
+            "}\n"
+        )
+        return (
+            preamble
+            + CSS_FILE.read_text(encoding="utf-8")
+            + "\n"
+            + DOCK_CSS_FILE.read_text(encoding="utf-8")
+        )
+
+    def _build_script(self, defaults: Dict[str, Any]) -> str:
+        payload = json.dumps(defaults, ensure_ascii=False)
+        return f"window.__HYPEROS4_DEFAULT__ = {payload};\n" + JS_FILE.read_text(encoding="utf-8")
+
+
+    def _install_fonts(self, dist: Path) -> bool:
+        """把 MiSans 字体与样式拷进 dashboard 的静态目录，返回是否可用。"""
+
+        src_dir = FONTS_SRC / "misans"
+        css = FONTS_SRC / "misans.css"
+        if not src_dir.is_dir() or not css.is_file():
+            return False
+        dst_dir = dist / "fonts" / "misans"
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        for item in src_dir.iterdir():
+            if item.suffix != ".woff2":
+                continue
+            target = dst_dir / item.name
+            if target.exists() and target.stat().st_size == item.stat().st_size:
+                continue
+            target.write_bytes(item.read_bytes())
+        dst_css = dst_dir / "misans.css"
+        if not dst_css.exists() or dst_css.stat().st_size != css.stat().st_size:
+            dst_css.write_bytes(css.read_bytes())
+        return True
+
+    def _apply(self) -> None:
+        index = self._dist_index()
+        if not index.is_file():
+            logger.warning("[HyperOS4] 找不到 dashboard 的 index.html：%s", index)
+            return
+
+        html = index.read_text(encoding="utf-8")
+        html_without = FONT_LINK_RE.sub("", SCRIPT_RE.sub("", STYLE_RE.sub("", html)))
+
+        if not self.config.plugin.enabled:
+            if html_without != html:
+                index.write_text(html_without, encoding="utf-8")
+                logger.info("[HyperOS4] 插件已停用，注入内容已移除")
+            return
+
+        if "</head>" not in html_without:
+            logger.warning("[HyperOS4] index.html 缺少 </head>，跳过注入")
+            return
+
+        defaults = self._defaults()
+        style_tag = (
+            f'\n<style id="{STYLE_ID}" data-plugin="local.dps.hyperos4-theme">\n'
+            f"{self._build_style(defaults)}</style>"
+        )
+        script_tag = (
+            f'\n<script id="{SCRIPT_ID}" data-plugin="local.dps.hyperos4-theme">\n'
+            f"{self._build_script(defaults)}</script>"
+        )
+        font_link = ""
+        if self._install_fonts(index.parent):
+            font_link = f'\n<link id="{FONT_LINK_ID}" rel="stylesheet" href="/fonts/misans/misans.css">'
+        updated = html_without.replace("</head>", f"{font_link}{style_tag}{script_tag}</head>", 1)
+
+        if updated == html:
+            logger.info("[HyperOS4] 注入内容已是最新")
+            return
+        index.write_text(updated, encoding="utf-8")
+        logger.info(
+            "[HyperOS4] 主题已注入（强调色=%s，圆角=%spx，模糊=%spx）",
+            defaults["accent"], defaults["radius"], defaults["blur"],
+        )
+
+    def _remove(self) -> bool:
+        index = self._dist_index()
+        if not index.is_file():
+            return False
+        html = index.read_text(encoding="utf-8")
+        cleaned = FONT_LINK_RE.sub("", SCRIPT_RE.sub("", STYLE_RE.sub("", html)))
+        if cleaned == html:
+            return False
+        index.write_text(cleaned, encoding="utf-8")
+        return True
+
+
+def create_plugin() -> HyperOS4ThemePlugin:
+    """宿主加载入口。"""
+
+    return HyperOS4ThemePlugin()

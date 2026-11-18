@@ -1,0 +1,830 @@
+/* HyperOS 4 风格主题皮肤
+ *
+ * 关键：dashboard 把主题令牌以「H S% L%」三元组内联写在 <html> 上，
+ * 变量名是 --color-*（不是 --primary）。所以这里必须覆盖 --color-*，
+ * 并用 !important 压过内联样式；否则改 --primary 完全无效。
+ *
+ * 变量：
+ *   --hyperos4-accent-h / -h2  强调色与副色色相
+ *   --hyperos4-radius          大圆角基准
+ *   --hyperos4-blur            磨砂半径
+ *   --hyperos4-tint            背景光晕浓度（0-1）
+ */
+
+html[data-hyperos4="on"] {
+  /* —— 浅色：HyperOS 4 —— */
+  --color-background: 240 20% 97% !important;
+  --color-foreground: 240 8% 12% !important;
+  --color-card: 0 0% 100% !important;
+  --color-card-foreground: 240 8% 12% !important;
+  --color-popover: 0 0% 100% !important;
+  --color-popover-foreground: 240 8% 12% !important;
+
+  --color-primary: var(--hyperos4-accent-h) 96% 50% !important;
+  --color-primary-foreground: 0 0% 100% !important;
+  --color-primary-gradient: linear-gradient(
+    135deg,
+    hsl(var(--hyperos4-accent-h) 98% 56%),
+    hsl(var(--hyperos4-accent-h2) 100% 46%)
+  ) !important;
+
+  --color-secondary: 240 14% 94% !important;
+  --color-secondary-foreground: 240 8% 18% !important;
+  --color-muted: 240 12% 95% !important;
+  --color-muted-foreground: 240 5% 45% !important;
+  --color-accent: 240 14% 92% !important;
+  --color-accent-foreground: 240 8% 16% !important;
+
+  --color-destructive: 356 70% 52% !important;
+  --color-destructive-foreground: 0 0% 100% !important;
+
+  --color-border: 240 10% 88% !important;
+  --color-input: 240 10% 90% !important;
+  --color-ring: var(--hyperos4-accent-h) 96% 58% !important;
+
+  --color-chart-1: var(--hyperos4-accent-h) 96% 55% !important;
+  --color-chart-2: 205 92% 52% !important;
+  --color-chart-3: 152 62% 44% !important;
+  --color-chart-4: 42 96% 54% !important;
+  --color-chart-5: 282 66% 60% !important;
+
+  /* —— 圆角 / 阴影 / 字体 —— */
+  --visual-radius-sm: calc(var(--hyperos4-radius) * 0.38) !important;
+  --visual-radius-md: calc(var(--hyperos4-radius) * 0.62) !important;
+  --visual-radius-lg: var(--hyperos4-radius) !important;
+  --visual-radius-xl: calc(var(--hyperos4-radius) * 1.32) !important;
+
+  --visual-shadow-sm: 0 1px 2px rgba(16, 18, 27, 0.04) !important;
+  --visual-shadow-md: 0 8px 24px -10px rgba(16, 18, 27, 0.16) !important;
+  --visual-shadow-lg: 0 20px 52px -20px rgba(16, 18, 27, 0.24) !important;
+  --visual-shadow-xl: 0 34px 84px -30px rgba(16, 18, 27, 0.28) !important;
+
+  --typography-font-family-base: "MiSans", "MiSans VF", "HarmonyOS Sans SC", "PingFang SC",
+    "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif !important;
+  --typography-font-weight-normal: 400 !important;
+  --typography-font-weight-medium: 500 !important;
+  --typography-font-weight-semibold: 600 !important;
+  --typography-font-weight-bold: 700 !important;
+
+  /* —— 布局：更宽松的侧栏与标题栏 —— */
+  --layout-sidebar-width: 14.5rem !important;
+  --layout-header-height: 3.75rem !important;
+  --layout-sidebar-nav-item-height: 3rem !important;
+
+  /* —— 压掉 retro 风格的纸张纹理与暖色 —— */
+  --retro-configured-paper-texture: none !important;
+  --retro-paper-warmth: 0% !important;
+  --retro-panel-depth: 0 !important;
+
+  color-scheme: light;
+}
+
+html.dark:not([data-hyperos4="off"]) {
+  --color-background: 240 10% 7% !important;
+  --color-foreground: 240 10% 95% !important;
+  --color-card: 240 8% 11% !important;
+  --color-card-foreground: 240 10% 95% !important;
+  --color-popover: 240 8% 12% !important;
+  --color-popover-foreground: 240 10% 95% !important;
+
+  --color-primary: var(--hyperos4-accent-h) 92% 58% !important;
+  --color-primary-foreground: 240 20% 8% !important;
+  --color-primary-gradient: linear-gradient(
+    135deg,
+    hsl(var(--hyperos4-accent-h) 96% 62%),
+    hsl(var(--hyperos4-accent-h2) 94% 48%)
+  ) !important;
+
+  --color-secondary: 240 6% 17% !important;
+  --color-secondary-foreground: 240 10% 92% !important;
+  --color-muted: 240 6% 15% !important;
+  --color-muted-foreground: 240 6% 64% !important;
+  --color-accent: 240 6% 19% !important;
+  --color-accent-foreground: 240 10% 92% !important;
+
+  --color-border: 240 6% 22% !important;
+  --color-input: 240 6% 22% !important;
+  --color-ring: var(--hyperos4-accent-h) 92% 62% !important;
+
+  --visual-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+  --visual-shadow-md: 0 10px 28px -10px rgba(0, 0, 0, 0.7) !important;
+  --visual-shadow-lg: 0 22px 56px -20px rgba(0, 0, 0, 0.8) !important;
+  --visual-shadow-xl: 0 38px 92px -30px rgba(0, 0, 0, 0.88) !important;
+
+  color-scheme: dark;
+}
+
+/* —— 全局背景：柔和光晕 —— */
+html[data-hyperos4="on"] body {
+  background-color: hsl(var(--color-background)) !important;
+  background-image:
+    radial-gradient(
+      1200px 620px at 10% -12%,
+      hsl(var(--hyperos4-accent-h) 100% 88% / calc(0.5 * var(--hyperos4-tint))),
+      transparent 62%
+    ),
+    radial-gradient(
+      920px 520px at 96% 2%,
+      hsl(var(--hyperos4-accent-h2) 100% 86% / calc(0.42 * var(--hyperos4-tint))),
+      transparent 58%
+    ) !important;
+  background-attachment: fixed !important;
+}
+
+html.dark:not([data-hyperos4="off"]) body {
+  background-image:
+    radial-gradient(
+      1200px 620px at 10% -12%,
+      hsl(var(--hyperos4-accent-h) 90% 30% / calc(0.34 * var(--hyperos4-tint))),
+      transparent 62%
+    ),
+    radial-gradient(
+      920px 520px at 96% 2%,
+      hsl(var(--hyperos4-accent-h2) 90% 28% / calc(0.3 * var(--hyperos4-tint))),
+      transparent 58%
+    ) !important;
+}
+
+/* —— 卡片与面板：半透明磨砂 —— */
+html[data-hyperos4="on"] [class*="bg-card"],
+html[data-hyperos4="on"] [class*="bg-popover"] {
+  backdrop-filter: blur(var(--hyperos4-blur)) saturate(1.6);
+}
+
+html[data-hyperos4="on"] [class*="rounded"][class*="border"]:not(button):not(a):not(span) {
+  border-color: hsl(var(--color-border) / 0.72) !important;
+  backdrop-filter: blur(var(--hyperos4-blur)) saturate(1.5);
+}
+
+/* —— 侧栏：玻璃层 —— */
+html[data-hyperos4="on"] aside,
+html[data-hyperos4="on"] nav[class*="border"] {
+  background: hsl(var(--color-card) / 0.72) !important;
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.2)) saturate(1.5);
+  border-color: hsl(var(--color-border) / 0.7) !important;
+}
+
+/* —— 顶部栏 —— */
+html[data-hyperos4="on"] header {
+  background: hsl(var(--color-background) / 0.72) !important;
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.2)) saturate(1.5);
+}
+
+/* —— 按钮：轻按反馈 + 主按钮渐变 —— */
+html[data-hyperos4="on"] button:not([disabled]),
+html[data-hyperos4="on"] a[role="button"] {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+html[data-hyperos4="on"] button:not([disabled]):active,
+html[data-hyperos4="on"] a[role="button"]:active {
+  transform: scale(0.972);
+}
+
+html[data-hyperos4="on"] button[class*="bg-primary"]:not([data-dashboard-option-card]) {
+  background-image: var(--color-primary-gradient) !important;
+  border-color: transparent !important;
+  box-shadow: 0 8px 20px -10px hsl(var(--color-primary) / 0.8) !important;
+}
+
+/* —— 输入框 —— */
+html[data-hyperos4="on"] input,
+html[data-hyperos4="on"] textarea,
+html[data-hyperos4="on"] select {
+  border-radius: calc(var(--visual-radius-md) * 0.92) !important;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+html[data-hyperos4="on"] input:focus-visible,
+html[data-hyperos4="on"] textarea:focus-visible,
+html[data-hyperos4="on"] select:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--color-ring) / 0.24) !important;
+}
+
+/* —— 标题 —— */
+html[data-hyperos4="on"] h1,
+html[data-hyperos4="on"] h2,
+html[data-hyperos4="on"] h3 {
+  letter-spacing: 0.01em;
+}
+
+/* —— 滚动条 —— */
+html[data-hyperos4="on"] * {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--color-muted-foreground) / 0.32) transparent;
+}
+
+html[data-hyperos4="on"] *::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+html[data-hyperos4="on"] *::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--color-muted-foreground) / 0.3);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+html[data-hyperos4="on"] *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html[data-hyperos4="on"] ::selection {
+  background: hsl(var(--color-ring) / 0.24);
+}
+
+
+/* ==========================================================================
+ * 深度改造层：侧栏、顶栏、卡片、按钮、气泡
+ * 目标是把「官方 modern 骨架」彻底换成 HyperOS 的层级感，而不只是换颜色。
+ * ========================================================================== */
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--color-card) / 0.86),
+    hsl(var(--color-card) / 0.66)
+  ) !important;
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.4)) saturate(1.7);
+  border: 1px solid hsl(var(--color-border) / 0.6) !important;
+  border-left: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-radius: 0 var(--visual-radius-lg) var(--visual-radius-lg) 0 !important;
+  box-shadow: 18px 0 48px -32px rgba(16, 18, 27, 0.35) !important;
+  margin: 10px 10px 10px 0 !important;
+  height: calc(100% - 20px) !important;
+}
+
+/* 侧栏导航：药丸形，激活态用主色渐变 */
+html[data-hyperos4="on"] aside[data-observation-sidebar] a[data-observation-key] {
+  border-radius: calc(var(--visual-radius-md) * 0.78) !important;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] a[data-observation-key]:hover {
+  background: hsl(var(--color-accent)) !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] a[data-observation-key][data-active="true"] {
+  background-image: var(--color-primary-gradient) !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  box-shadow: 0 10px 24px -14px hsl(var(--color-primary) / 0.9) !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] a[data-observation-key][data-active="true"] * {
+  color: hsl(var(--color-primary-foreground)) !important;
+}
+
+/* 顶栏：悬浮玻璃条 */
+html[data-hyperos4="on"] header[data-observation-home-head],
+html[data-hyperos4="on"] body > div > header {
+  background: hsl(var(--color-background) / 0.7) !important;
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.3)) saturate(1.6);
+  border-bottom: 1px solid hsl(var(--color-border) / 0.5) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+}
+
+/* 卡片：无硬边框、大圆角、悬浮 */
+html[data-hyperos4="on"] main [class*="rounded-2xl"],
+html[data-hyperos4="on"] main [class*="rounded-xl"] {
+  border-radius: var(--visual-radius-lg) !important;
+  box-shadow: var(--visual-shadow-md) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+html[data-hyperos4="on"] main [class*="rounded-2xl"]:hover,
+html[data-hyperos4="on"] main [class*="rounded-xl"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--visual-shadow-lg) !important;
+}
+
+/* 按钮：圆润 + 主按钮渐变 */
+html[data-hyperos4="on"] [data-dashboard-button] {
+  border-radius: calc(var(--visual-radius-md) * 0.86) !important;
+}
+
+html[data-hyperos4="on"] [data-dashboard-button][class*="bg-primary"] {
+  background-image: var(--color-primary-gradient) !important;
+  border-color: transparent !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  box-shadow: 0 10px 24px -14px hsl(var(--color-primary) / 0.9) !important;
+}
+
+/* 主页指标数字：更厚重的字形 */
+html[data-hyperos4="on"] main [class*="text-3xl"],
+html[data-hyperos4="on"] main [class*="text-4xl"] {
+  font-weight: 680 !important;
+  letter-spacing: -0.01em;
+}
+
+/* 聊天气泡 */
+html[data-hyperos4="on"] [class*="rounded-2xl"][class*="bg-primary"] {
+  background-image: var(--color-primary-gradient) !important;
+  border-radius: calc(var(--visual-radius-md) * 1.05) !important;
+}
+
+
+/* ==========================================================================
+ * 底部悬浮底栏：把侧栏的 8 个功能入口搬到底部
+ * ========================================================================== */
+
+
+
+/* ==========================================================================
+ * HyperOS 4 排版与表层：字体尺度、圆角、填充式控件、浅蓝选中态
+ * ========================================================================== */
+
+html[data-hyperos4="on"] {
+  /* 字体：MiSans 优先，字重与行高按 HyperOS 设定 */
+  --typography-font-family-base: "MiSans VF", "MiSans", "MiSans Latin", "HarmonyOS Sans SC",
+    "PingFang SC", "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif !important;
+  --typography-font-family-code: "MiSans Mono", "JetBrains Mono", "Cascadia Mono", Consolas, monospace !important;
+
+  --typography-font-size-xs: 0.75rem !important;
+  --typography-font-size-sm: 0.875rem !important;
+  --typography-font-size-base: 0.9375rem !important;
+  --typography-font-size-lg: 1.0625rem !important;
+  --typography-font-size-xl: 1.25rem !important;
+  --typography-font-size-2xl: 1.5rem !important;
+
+  --typography-font-weight-normal: 400 !important;
+  --typography-font-weight-medium: 500 !important;
+  --typography-font-weight-semibold: 600 !important;
+  --typography-font-weight-bold: 700 !important;
+
+  --typography-line-height-tight: 1.25 !important;
+  --typography-line-height-normal: 1.55 !important;
+  --typography-line-height-relaxed: 1.75 !important;
+  --typography-letter-spacing-normal: 0.01em !important;
+
+  /* 圆角：HyperOS 卡片更大更圆 */
+  --visual-radius-sm: 10px !important;
+  --visual-radius-md: 16px !important;
+  --visual-radius-lg: 28px !important;
+  --visual-radius-xl: 36px !important;
+
+  /* 阴影：更柔、更薄 */
+  --visual-shadow-sm: 0 1px 2px rgba(17, 17, 26, 0.04) !important;
+  --visual-shadow-md: 0 6px 18px -8px rgba(17, 17, 26, 0.12) !important;
+  --visual-shadow-lg: 0 16px 40px -18px rgba(17, 17, 26, 0.2) !important;
+  --visual-shadow-xl: 0 28px 70px -26px rgba(17, 17, 26, 0.26) !important;
+
+  /* 层级间距略放大 */
+  --layout-space-md: 1.125rem !important;
+  --layout-space-lg: 1.75rem !important;
+}
+
+/* 正文与标题 */
+html[data-hyperos4="on"] body {
+  font-family: var(--typography-font-family-base) !important;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[data-hyperos4="on"] h1 {
+  font-weight: 650 !important;
+  letter-spacing: -0.01em !important;
+}
+
+html[data-hyperos4="on"] h2 {
+  font-weight: 600 !important;
+  letter-spacing: 0.005em !important;
+}
+
+html[data-hyperos4="on"] h3 {
+  font-weight: 600 !important;
+}
+
+/* 数字等宽，仪表盘更整齐 */
+html[data-hyperos4="on"] main [class*="text-3xl"],
+html[data-hyperos4="on"] main [class*="text-4xl"],
+html[data-hyperos4="on"] [data-observation-usage-small] {
+  font-weight: 650 !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* 卡片：纯白、无硬边、大圆角 */
+html[data-hyperos4="on"] main [class*="rounded-2xl"],
+html[data-hyperos4="on"] main [class*="rounded-xl"] {
+  border-radius: var(--visual-radius-lg) !important;
+  border-color: hsl(var(--color-border) / 0.45) !important;
+  background-color: hsl(var(--color-card)) !important;
+  box-shadow: var(--visual-shadow-md) !important;
+}
+
+/* 按钮：胶囊形，主按钮渐变，次要按钮浅灰填充 */
+html[data-hyperos4="on"] [data-dashboard-button] {
+  border-radius: 999px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+}
+
+html[data-hyperos4="on"] [data-dashboard-button][class*="bg-primary"] {
+  background-image: var(--color-primary-gradient) !important;
+  border-color: transparent !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  box-shadow: 0 10px 24px -14px hsl(var(--color-primary) / 0.85) !important;
+}
+
+html[data-hyperos4="on"] [data-dashboard-button][class*="bg-card"],
+html[data-hyperos4="on"] [data-dashboard-button][class*="bg-background"] {
+  background-color: hsl(var(--color-muted)) !important;
+  border-color: transparent !important;
+}
+
+/* 输入框：填充式，无边框 */
+html[data-hyperos4="on"] input:not([type="range"]):not([type="checkbox"]),
+html[data-hyperos4="on"] textarea,
+html[data-hyperos4="on"] select {
+  border-radius: 14px !important;
+  border-color: transparent !important;
+  background-color: hsl(var(--color-muted)) !important;
+  box-shadow: none !important;
+}
+
+html[data-hyperos4="on"] input:focus-visible,
+html[data-hyperos4="on"] textarea:focus-visible,
+html[data-hyperos4="on"] select:focus-visible {
+  background-color: hsl(var(--color-card)) !important;
+  box-shadow: 0 0 0 3px hsl(var(--color-ring) / 0.28) !important;
+}
+
+/* 侧栏选中态：HyperOS 的浅蓝底 + 蓝字，而不是整块渐变 */
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-observation-keys] a[data-active="true"],
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-dock="true"] a[data-active="true"] {
+  background-image: none !important;
+  background-color: hsl(var(--color-primary) / 0.14) !important;
+  color: hsl(var(--color-primary)) !important;
+  box-shadow: none !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul a[data-active="true"] * {
+  color: hsl(var(--color-primary)) !important;
+}
+
+/* 会话列表选中/悬停 */
+html[data-hyperos4="on"] [data-observation-conversations] [data-active="true"] {
+  background-color: hsl(var(--color-primary) / 0.12) !important;
+  border-radius: 16px !important;
+}
+
+/* 分割线更淡 */
+html[data-hyperos4="on"] [class*="border-b"],
+html[data-hyperos4="on"] [class*="border-t"] {
+  border-color: hsl(var(--color-border) / 0.55) !important;
+}
+
+/* 深色模式下的表面 */
+html[data-hyperos4="on"].dark main [class*="rounded-2xl"],
+html[data-hyperos4="on"].dark main [class*="rounded-xl"] {
+  background-color: hsl(240 6% 10%) !important;
+}
+
+/* 界面风格选项卡：选中态用浅蓝底 + 蓝边 + 蓝字，与 HyperOS 列表一致 */
+html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] {
+  background-image: none !important;
+  background-color: hsl(var(--color-primary) / 0.12) !important;
+  border-color: hsl(var(--color-primary) / 0.45) !important;
+  box-shadow: none !important;
+}
+
+html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] [class*="font-semibold"] {
+  color: hsl(var(--color-primary)) !important;
+}
+
+html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] [data-option-part="icon"] {
+  border-color: transparent !important;
+  background-color: hsl(var(--color-primary) / 0.18) !important;
+  color: hsl(var(--color-primary)) !important;
+}
+
+
+
+/* ==========================================================================
+ * HyperOS 4 精修层：悬浮侧栏、列表行、开关与滑杆、分段控件
+ * ========================================================================== */
+
+/* 侧栏做成独立悬浮面板 */
+html[data-hyperos4="on"] aside[data-observation-sidebar] {
+  background: hsl(var(--color-card) / 0.82) !important;
+  backdrop-filter: blur(28px) saturate(1.7) !important;
+  border: 1px solid hsl(var(--color-border) / 0.45) !important;
+  border-radius: 28px !important;
+  margin: 12px 0 12px 12px !important;
+  height: calc(100% - 24px) !important;
+  box-shadow: 0 18px 46px -26px rgba(17, 17, 26, 0.28) !important;
+}
+
+/* 品牌区留白更大 */
+html[data-hyperos4="on"] aside[data-observation-sidebar] > div:first-child {
+  padding-top: 6px !important;
+}
+
+/* 会话行：圆角卡片、悬停浅灰、选中浅蓝 */
+html[data-hyperos4="on"] [data-observation-conversation-list] a,
+html[data-hyperos4="on"] [data-observation-conversation-list] button {
+  border-radius: 18px !important;
+  padding: 8px 10px !important;
+  transition: background-color 0.16s ease, transform 0.16s ease !important;
+}
+
+html[data-hyperos4="on"] [data-observation-conversation-list] a:hover,
+html[data-hyperos4="on"] [data-observation-conversation-list] button:hover {
+  background: hsl(var(--color-muted)) !important;
+}
+
+html[data-hyperos4="on"] [data-observation-conversation-list] a[data-active="true"],
+html[data-hyperos4="on"] [data-observation-conversation-list] button[data-active="true"] {
+  background: hsl(var(--color-primary) / 0.12) !important;
+}
+
+/* 头像：HyperOS 的圆角方 */
+html[data-hyperos4="on"] [data-observation-conversation-list] img,
+html[data-hyperos4="on"] [data-observation-conversation-list] [class*="rounded"] > img {
+  border-radius: 14px !important;
+}
+
+/* 开关：加大加粗，iOS / HyperOS 手感 */
+html[data-hyperos4="on"] button[role="switch"] {
+  width: 52px !important;
+  height: 32px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background: hsl(var(--color-muted)) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+html[data-hyperos4="on"] button[role="switch"][data-state="checked"],
+html[data-hyperos4="on"] button[role="switch"][aria-checked="true"] {
+  background: hsl(var(--color-primary)) !important;
+}
+
+html[data-hyperos4="on"] button[role="switch"] > span {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  box-shadow: 0 2px 6px rgba(17, 17, 26, 0.18) !important;
+  transition: transform 0.2s ease !important;
+}
+
+html[data-hyperos4="on"] button[role="switch"][data-state="checked"] > span,
+html[data-hyperos4="on"] button[role="switch"][aria-checked="true"] > span {
+  transform: translateX(20px) !important;
+}
+
+/* 滑杆：细轨、大圆点 */
+html[data-hyperos4="on"] [role="slider"] {
+  border-radius: 999px !important;
+}
+
+html[data-hyperos4="on"] input[type="range"] {
+  height: 6px !important;
+  border-radius: 999px !important;
+  accent-color: hsl(var(--color-primary)) !important;
+}
+
+/* 分段控件（浅色/深色/跟随系统） */
+html[data-hyperos4="on"] [role="tablist"] {
+  background: hsl(var(--color-muted)) !important;
+  border-radius: 999px !important;
+  padding: 4px !important;
+  gap: 2px !important;
+}
+
+html[data-hyperos4="on"] [role="tablist"] [role="tab"][data-state="active"] {
+  background: hsl(var(--color-card)) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 8px -2px rgba(17, 17, 26, 0.16) !important;
+}
+
+/* 主内容区的分节标题：更克制 */
+html[data-hyperos4="on"] main h2,
+html[data-hyperos4="on"] main h3 {
+  letter-spacing: 0.005em !important;
+}
+
+/* 图表柱状与线条统一蓝 */
+html[data-hyperos4="on"] .recharts-bar-rectangle path,
+html[data-hyperos4="on"] .recharts-bar-rectangle rect {
+  rx: 4px;
+  ry: 4px;
+}
+/* —— 外观页里的 HyperOS 面板 —— */
+#hyperos4-panel {
+  border-radius: var(--visual-radius-lg);
+  border: 1px solid hsl(var(--color-border) / 0.8);
+  background: hsl(var(--color-card) / 0.86);
+  backdrop-filter: blur(var(--hyperos4-blur)) saturate(1.5);
+  box-shadow: var(--visual-shadow-md);
+  padding: 16px;
+  margin-bottom: 16px;
+  color: hsl(var(--color-card-foreground));
+}
+
+#hyperos4-panel .hx-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#hyperos4-panel .hx-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+#hyperos4-panel .hx-desc {
+  font-size: 12px;
+  color: hsl(var(--color-muted-foreground));
+  margin-top: 2px;
+}
+
+#hyperos4-panel .hx-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+#hyperos4-panel .hx-label {
+  font-size: 13px;
+}
+
+#hyperos4-panel .hx-value {
+  font-size: 12px;
+  color: hsl(var(--color-muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+#hyperos4-panel .hx-swatches {
+  display: flex;
+  gap: 8px;
+}
+
+#hyperos4-panel .hx-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 2px solid hsl(var(--color-border));
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#hyperos4-panel .hx-swatch:hover {
+  transform: scale(1.08);
+}
+
+#hyperos4-panel .hx-swatch[aria-pressed="true"] {
+  box-shadow: 0 0 0 3px hsl(var(--color-ring) / 0.28);
+  border-color: hsl(var(--color-ring));
+}
+
+#hyperos4-panel input[type="range"] {
+  width: 180px;
+  accent-color: hsl(var(--color-primary));
+}
+
+#hyperos4-panel .hx-switch {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: hsl(var(--color-muted));
+  border: 1px solid hsl(var(--color-border));
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+#hyperos4-panel .hx-switch[aria-checked="true"] {
+  background: hsl(var(--color-primary));
+  border-color: transparent;
+}
+
+#hyperos4-panel .hx-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s ease;
+}
+
+#hyperos4-panel .hx-switch[aria-checked="true"]::after {
+  transform: translateX(20px);
+}
+
+#hyperos4-panel .hx-reset {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--color-border));
+  background: transparent;
+  color: hsl(var(--color-muted-foreground));
+  cursor: pointer;
+}
+
+#hyperos4-panel .hx-reset:hover {
+  background: hsl(var(--color-accent));
+  color: hsl(var(--color-accent-foreground));
+}
+
+/* ==========================================================================
+ * 右下角对话输入条 + 展开/收起按钮
+ * ========================================================================== */
+
+html[data-hyperos4="on"][data-hyperos4-composer="collapsed"] .hyperos4-composer {
+  display: none !important;
+}
+
+html[data-hyperos4="on"] .hyperos4-composer {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 92px !important;
+  width: 366px !important;
+  max-width: 366px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  z-index: 400 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  border-radius: 22px !important;
+  background: hsl(var(--color-card) / 0.96) !important;
+  backdrop-filter: blur(var(--hyperos4-blur, 18px)) saturate(1.6) !important;
+  border: 1px solid hsl(var(--color-border) / 0.75) !important;
+  box-shadow: 0 18px 40px -22px rgba(16, 18, 27, 0.45) !important;
+}
+
+html[data-hyperos4="on"] .hyperos4-composer > * {
+  min-width: 0 !important;
+}
+
+html[data-hyperos4="on"] .hyperos4-composer label {
+  width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
+html[data-hyperos4="on"] .hyperos4-composer input,
+html[data-hyperos4="on"] .hyperos4-composer textarea {
+  width: 100% !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  font-size: 13px !important;
+}
+
+#hyperos4-composer-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--color-border) / 0.6);
+  background-image: var(--color-primary-gradient);
+  color: hsl(var(--color-primary-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 16px 36px -16px hsl(var(--color-primary) / 0.8);
+  z-index: 500;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+#hyperos4-composer-fab:hover {
+  transform: translateY(-2px);
+}
+
+#hyperos4-composer-fab:active {
+  transform: scale(0.95);
+}
+
+#hyperos4-composer-fab svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* main 抬到侧栏之上，输入条才画得出来 */
+html[data-hyperos4="on"] .z-10:has(main) {
+  z-index: 30 !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar] {
+  position: relative !important;
+  z-index: 40 !important;
+}
