@@ -310,6 +310,68 @@
     )
   }
 
+
+  /* 兼容模式：官方 dashboard 没有源码改动时，自建底栏 */
+  function ensureCompatDock() {
+    var root = document.documentElement
+    var wanted = active() && settings.dockEnabled
+    var native = document.querySelector('ul[data-hyperos4-dock="true"]')
+    var dock = document.getElementById('hyperos4-dock')
+
+    if (!wanted || native) {
+      if (dock) dock.remove()
+      root.removeAttribute('data-hyperos4-dock-compat')
+      return
+    }
+    if (!dock) {
+      dock = document.createElement('nav')
+      dock.id = 'hyperos4-dock'
+      dock.setAttribute('aria-label', 'HyperOS 功能底栏')
+      document.body.appendChild(dock)
+    }
+    root.setAttribute('data-hyperos4-dock-compat', 'on')
+
+    var source = document.querySelector('aside nav ul[data-observation-keys]')
+    if (!source) return
+    var links = Array.prototype.slice.call(source.querySelectorAll('a'))
+    if (!links.length) return
+    if (dock.dataset.version !== String(links.length)) {
+      dock.innerHTML = ''
+      links.forEach(function (link) {
+        var item = document.createElement('a')
+        item.href = link.getAttribute('href') || '/'
+        var svg = link.querySelector('svg')
+        if (svg) item.appendChild(svg.cloneNode(true))
+        var label = (link.getAttribute('aria-label') || link.textContent || '').trim()
+        var text = document.createElement('span')
+        text.textContent = label.replace(/设置$/, '').replace(/管理$/, '').replace(/^长期记忆$/, '记忆')
+        item.appendChild(text)
+        item.addEventListener('click', function (event) {
+          event.preventDefault()
+          var path = new URL(item.href, location.origin).pathname
+          if (location.pathname !== path) {
+            history.pushState({}, '', item.href)
+            window.dispatchEvent(new PopStateEvent('popstate'))
+          }
+          syncCompatDockActive()
+        })
+        dock.appendChild(item)
+      })
+      dock.dataset.version = String(links.length)
+    }
+    syncCompatDockActive()
+  }
+
+  function syncCompatDockActive() {
+    var dock = document.getElementById('hyperos4-dock')
+    if (!dock) return
+    Array.prototype.forEach.call(dock.children, function (item) {
+      var path = new URL(item.href, location.origin).pathname
+      var on = path === '/' ? location.pathname === '/' : location.pathname.indexOf(path) === 0
+      item.dataset.active = on ? 'true' : 'false'
+    })
+  }
+
   /* 底栏由 dashboard 源码渲染，这里保持空实现 */
   function syncDock() {}
 
@@ -551,6 +613,7 @@
       ensurePanel()
       ensureCard()
       syncDock()
+      ensureCompatDock()
       markComposer()
       syncFab()
     }, 180)
@@ -563,6 +626,7 @@
     ensurePanel()
     ensureCard()
     syncDock()
+    ensureCompatDock()
     markComposer()
     syncFab()
     new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true })

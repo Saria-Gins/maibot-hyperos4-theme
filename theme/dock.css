@@ -164,3 +164,78 @@ html[data-hyperos4="on"]:not([data-hyperos4-dock="on"]) aside[data-observation-s
   color: hsl(var(--color-primary-foreground)) !important;
 }
 
+
+
+/* ========== 兼容模式：官方 dashboard（无源码改动）也能用底栏 ========== */
+
+/* 只隐藏设置入口那个 nav，会话列表的 nav 要保留 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar] nav:not([data-observation-conversation-list]) {
+  display: none !important;
+}
+
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar] [data-observation-section-title] {
+  display: none !important;
+}
+
+/* 只隐藏标题那一行，section 保留（里面还有会话列表） */
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar] div:has(> [data-observation-section-title]) {
+  display: none !important;
+}
+
+#hyperos4-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--color-border) / 0.55);
+  background: hsl(var(--color-card) / var(--hyperos4-dock-alpha, 0.38));
+  backdrop-filter: blur(var(--hyperos4-dock-blur, 24px)) saturate(1.8);
+  box-shadow: 0 24px 60px -28px rgba(16, 18, 27, 0.45), 0 6px 18px -12px rgba(16, 18, 27, 0.3);
+  z-index: 70;
+}
+
+#hyperos4-dock a {
+  width: 64px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 4px;
+  border-radius: 18px;
+  font-size: 11px;
+  line-height: 1.2;
+  color: hsl(var(--color-muted-foreground));
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+#hyperos4-dock a svg {
+  width: 20px;
+  height: 20px;
+}
+
+#hyperos4-dock a:hover {
+  background: hsl(var(--color-accent));
+  transform: translateY(-2px);
+}
+
+#hyperos4-dock a[data-active="true"] {
+  background: hsl(var(--color-primary) / 0.14);
+  color: hsl(var(--color-primary));
+}
+
+#hyperos4-dock a[data-active="true"] * {
+  color: hsl(var(--color-primary));
+}
+
+/* 兼容模式下主内容留出底栏空间 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] main {
+  padding-bottom: 108px !important;
+}
