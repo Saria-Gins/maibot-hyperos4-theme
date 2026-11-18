@@ -549,33 +549,16 @@ html[data-hyperos4="on"] [data-observation-conversation-list] [class*="rounded"]
   border-radius: 14px !important;
 }
 
-/* 开关：加大加粗，iOS / HyperOS 手感 */
+/* 开关：只改配色，几何尺寸交给 dashboard，避免滑块错位 */
 html[data-hyperos4="on"] button[role="switch"] {
-  width: 52px !important;
-  height: 32px !important;
-  border-radius: 999px !important;
-  border: 0 !important;
-  background: hsl(var(--color-muted)) !important;
+  background-color: hsl(var(--color-muted)) !important;
   transition: background-color 0.2s ease !important;
 }
 
 html[data-hyperos4="on"] button[role="switch"][data-state="checked"],
 html[data-hyperos4="on"] button[role="switch"][aria-checked="true"] {
-  background: hsl(var(--color-primary)) !important;
-}
-
-html[data-hyperos4="on"] button[role="switch"] > span {
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 999px !important;
-  background: #fff !important;
-  box-shadow: 0 2px 6px rgba(17, 17, 26, 0.18) !important;
-  transition: transform 0.2s ease !important;
-}
-
-html[data-hyperos4="on"] button[role="switch"][data-state="checked"] > span,
-html[data-hyperos4="on"] button[role="switch"][aria-checked="true"] > span {
-  transform: translateX(20px) !important;
+  background-color: hsl(var(--color-primary)) !important;
+  background-image: none !important;
 }
 
 /* 滑杆：细轨、大圆点 */
