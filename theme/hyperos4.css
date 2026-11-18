@@ -617,6 +617,40 @@ html[data-hyperos4="on"] input[class*="font-mono"] {
   font-family: var(--typography-font-family-code) !important;
 }
 
+
+
+/* 工具栏（筛选/排序/计数）：缩小字号与内边距，避免下拉箭头被相邻元素压住 */
+html[data-hyperos4="on"] button[role="combobox"],
+html[data-hyperos4="on"] [data-radix-select-trigger] {
+  font-size: 0.8125rem !important;
+  letter-spacing: 0 !important;
+  border-radius: 999px !important;
+}
+
+/* 下拉箭头：提高对比度，避免 50% 透明度在浅色卡片上看不见 */
+html[data-hyperos4="on"] button[role="combobox"] svg:last-of-type,
+html[data-hyperos4="on"] [data-radix-select-trigger] svg:last-of-type {
+  opacity: 1 !important;
+  color: hsl(var(--color-foreground) / 0.62) !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-hyperos4="on"] button[role="combobox"] > span,
+html[data-hyperos4="on"] [data-radix-select-trigger] > span {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-hyperos4="on"] [data-dashboard-badge="true"] {
+  font-size: 0.6875rem !important;
+  letter-spacing: 0 !important;
+  border-radius: 999px !important;
+  padding-inline: 8px !important;
+  white-space: nowrap !important;
+}
+
 /* —— 外观页里的 HyperOS 面板 —— */
 #hyperos4-panel {
   border-radius: var(--visual-radius-lg);
@@ -830,3 +864,19 @@ html[data-hyperos4="on"] aside[data-observation-sidebar] {
   position: relative !important;
   z-index: 40 !important;
 }
+
+/* 让工具栏下拉按内容宽度排版，不再伸到相邻计数徽标下面 */
+html[data-hyperos4="on"] div:has(> button[role="combobox"]) {
+  min-width: 0 !important;
+}
+
+html[data-hyperos4="on"] div:has(> button[role="combobox"]) > button[role="combobox"] {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+html[data-hyperos4="on"] [data-plugin-market-count-badge="true"] {
+  margin-left: 4px !important;
+}
+
