@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.4
+
+- 关闭 `font-synthesis`，标题字重改回 600，避免内置字体被浏览器合成粗体导致笔画发虚
+- 存储键升级到 `hyperos4-theme.settings.v3`：迁移旧设置时把强调色重置为 HyperOS 蓝，修复强调色残留为橙色
+- 适配器等页面的开关、选中态恢复蓝色
+
 ## 6.1.3
 
 - 全局字体覆盖：主题内所有元素统一使用内置 MiSans，等宽场景（pre/code/kbd/.font-mono）保留等宽字体
