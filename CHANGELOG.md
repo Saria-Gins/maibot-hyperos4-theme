@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.5.1
+
+- 底栏恢复显示插件自定义页面入口（去掉 `/extensions` 过滤规则）
+- 修复滚动页面时底栏跟着移动：重置侧栏的 `backdrop-filter/transform/contain`，避免它成为 fixed 的包含块
+
 ## 6.5.0 — 内置 dashboard 构建，市场安装即源码模式
 
 - 插件打包了一份打好补丁的 dashboard 构建（714 文件 / 9.3 MB）

@@ -1,3 +1,12 @@
+/* 侧栏不能成为 fixed 的包含块，否则滚动页面时底栏会跟着移动 */
+html[data-hyperos4="on"] aside[data-observation-sidebar] {
+  backdrop-filter: none !important;
+  filter: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  contain: none !important;
+}
+
 /* 侧栏不能成为 fixed 子元素的包含块，否则底栏会相对侧栏定位 */
 html[data-hyperos4="on"] aside[data-observation-sidebar] {
   backdrop-filter: none !important;
@@ -316,10 +325,7 @@ html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"
   display: none !important;
 }
 
-/* 底栏只保留核心入口：插件自定义页面（/extensions）不进底栏，两种模式一致 */
-html[data-hyperos4="on"] nav ul[data-hyperos4-dock="true"] li:has(> a[href^="/extensions"]) {
-  display: none !important;
-}
+
 
 /* 侧栏折叠时底栏只显示图标，和源码模式一致 */
 html[data-hyperos4="on"]:has(aside[data-observation-sidebar][data-collapsed="true"]) #hyperos4-dock span {
