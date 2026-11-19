@@ -37,10 +37,12 @@ git clone https://github.com/Saria-Gins/maibot-hyperos4-theme.git local_dps_hype
 
 ### 方式三：下载压缩包
 
-1. 到 [Releases](https://github.com/Saria-Gins/maibot-hyperos4-theme/releases) 下载对应版本的 Source code (zip)
-2. 解压到 `MaiBot/plugins/local_dps_hyperos4_theme/`
-3. 确认该目录下能直接看到 `_manifest.json`、`plugin.py`
+1. 到 [Releases](https://github.com/Saria-Gins/maibot-hyperos4-theme/releases) 下载 **`maibot-hyperos4-theme-v<版本>.zip`**
+2. 在 `MaiBot/plugins/` 下新建目录 `local_dps_hyperos4_theme`
+3. 把 zip 内容解压到该目录，确认根下能直接看到 `_manifest.json`、`plugin.py`
 4. 重启麦麦
+
+> 每个 tag 发布时由 GitHub Actions 自动构建该 zip（含字体与内置 dashboard 构建，约 15 MB）。
 
 ### 环境要求
 
