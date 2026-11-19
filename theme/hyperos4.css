@@ -917,3 +917,21 @@ html[data-hyperos4="on"] [data-plugin-market-count-badge="true"] {
   margin-left: 4px !important;
 }
 
+
+/* 折叠头像列：隐藏滚动条，纯靠滚轮/触控板滚动 */
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-conversation-list] [data-radix-scroll-area-scrollbar],
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-conversation-list] [data-dashboard-scrollbar],
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list] [data-radix-scroll-area-scrollbar] {
+  display: none !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-conversation-list] * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-conversation-list] *::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
