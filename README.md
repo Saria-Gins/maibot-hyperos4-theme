@@ -96,6 +96,15 @@ git clone https://github.com/Saria-Gins/maibot-hyperos4-theme.git local_dps_hype
 
 ---
 
+## 安装后是源码模式还是兼容模式
+
+插件内置了一份打好补丁的 dashboard 构建（`dashboard/hyperos4-dashboard-<版本>.zip`）。
+
+- **dashboard 版本一致** → 插件启动时把内置构建铺进 `dist`，直接获得源码模式（底栏由 dashboard 渲染），首次会备份官方 dist，卸载自动还原
+- **版本不一致** → 不动你的 `dist`，自动使用兼容模式（插件自建底栏与头像列）
+
+也就是说**市场安装后默认就是源码模式，不需要你构建任何东西**。
+
 ## 关于「悬浮底栏」的实现
 
 底栏有两种运行方式，插件会自动选择：

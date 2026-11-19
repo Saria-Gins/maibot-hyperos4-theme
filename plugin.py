@@ -24,6 +24,7 @@ STYLE_ID = "hyperos4-theme-style"
 SCRIPT_ID = "hyperos4-theme-script"
 FONT_LINK_ID = "hyperos4-fonts"
 FONTS_SRC = Path(__file__).parent / "fonts"
+BUILD_SRC = Path(__file__).parent / "dashboard"
 STYLE_RE = re.compile(rf"\n?<style id=\"{STYLE_ID}\"[^>]*>.*?</style>", re.S)
 SCRIPT_RE = re.compile(rf"\n?<script id=\"{SCRIPT_ID}\"[^>]*>.*?</script>", re.S)
 FONT_LINK_RE = re.compile(rf"\n?<link id=\"{FONT_LINK_ID}\"[^>]*>")
@@ -128,12 +129,137 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
             dst_css.write_bytes(css.read_bytes())
         return True
 
+
+    # ---------------------------------------------------------------- 源码模式
+
+    def _installed_dashboard_version(self) -> str | None:
+        try:
+            from importlib.metadata import version
+
+            return version("maibot-dashboard")
+        except Exception:
+            return None
+
+    def _build_meta(self) -> dict | None:
+        meta_file = BUILD_SRC / "build.json"
+        if not meta_file.is_file():
+            return None
+        try:
+            import json
+
+            return json.loads(meta_file.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _deploy_dashboard_build(self) -> str:
+        """dashboard 版本匹配时，把插件内置的构建铺进 dist，直接获得源码模式。
+
+        返回状态字符串：deployed / skipped-version / skipped-no-build / failed
+        """
+
+        meta = self._build_meta()
+        if not meta:
+            return "skipped-no-build"
+        target_version = str(meta.get("dashboard_version") or "")
+        installed = self._installed_dashboard_version()
+        if not installed or (target_version and installed != target_version):
+            return "skipped-version"
+
+        import shutil
+        import zipfile
+
+        index = self._dist_index()
+        dist = index.parent
+        marker = dist / f".hyperos4-build-{target_version}"
+        if marker.is_file():
+            return "deployed"
+
+        zip_path = BUILD_SRC / str(meta.get("zip") or "")
+        if not zip_path.is_file():
+            return "skipped-no-build"
+
+        backup = dist.parent / "maibot_dashboard_dist_official.zip"
+        if not backup.is_file():
+            tmp = backup.with_suffix(".tmp")
+            with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zf:
+                for item in dist.rglob("*"):
+                    if item.is_file():
+                        zf.write(item, item.relative_to(dist))
+            tmp.replace(backup)
+
+        staging = dist.parent / "maibot_dashboard_dist_staging"
+        if staging.exists():
+            shutil.rmtree(staging)
+        staging.mkdir(parents=True)
+        with zipfile.ZipFile(zip_path) as zf:
+            zf.extractall(staging)
+
+        for item in dist.iterdir():
+            if item.name in {"fonts"}:
+                continue
+            if item.is_dir():
+                shutil.rmtree(item, ignore_errors=True)
+            else:
+                item.unlink(missing_ok=True)
+        for item in staging.iterdir():
+            if item.name == "fonts":
+                continue
+            target = dist / item.name
+            if target.is_dir():
+                shutil.rmtree(target, ignore_errors=True)
+            shutil.move(str(item), str(target))
+        shutil.rmtree(staging, ignore_errors=True)
+
+        marker.write_text(target_version, encoding="utf-8")
+        return "deployed"
+
+    def _restore_dashboard_build(self) -> bool:
+        """卸载时把官方 dist 还原回去。"""
+
+        import shutil
+        import zipfile
+
+        index = self._dist_index()
+        dist = index.parent
+        backup = dist.parent / "maibot_dashboard_dist_official.zip"
+        if not backup.is_file():
+            return False
+        staging = dist.parent / "maibot_dashboard_dist_restore"
+        if staging.exists():
+            shutil.rmtree(staging)
+        staging.mkdir(parents=True)
+        with zipfile.ZipFile(backup) as zf:
+            zf.extractall(staging)
+        for item in dist.iterdir():
+            if item.name == "fonts":
+                continue
+            if item.is_dir():
+                shutil.rmtree(item, ignore_errors=True)
+            else:
+                item.unlink(missing_ok=True)
+        for item in staging.iterdir():
+            if item.name == "fonts":
+                continue
+            target = dist / item.name
+            if target.is_dir():
+                shutil.rmtree(target, ignore_errors=True)
+            shutil.move(str(item), str(target))
+        shutil.rmtree(staging, ignore_errors=True)
+        for marker in dist.glob(".hyperos4-build-*"):
+            marker.unlink(missing_ok=True)
+        return True
+
     def _apply(self) -> None:
         index = self._dist_index()
         if not index.is_file():
             logger.warning("[HyperOS4] 找不到 dashboard 的 index.html：%s", index)
             return
 
+        status = self._deploy_dashboard_build()
+        if status == "deployed":
+            logger.info("HyperOS 4：已应用内置 dashboard 构建（源码模式）")
+        elif status == "skipped-version":
+            logger.info("HyperOS 4：dashboard 版本不匹配，使用兼容模式底栏")
         html = index.read_text(encoding="utf-8")
         html_without = FONT_LINK_RE.sub("", SCRIPT_RE.sub("", STYLE_RE.sub("", html)))
 
@@ -197,6 +323,7 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
             return False
         index.write_text(cleaned, encoding="utf-8")
         self._uninstall_fonts()
+        self._restore_dashboard_build()
         return True
 
 
