@@ -243,7 +243,10 @@ html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"
 
 /* ========== 兼容模式：折叠头像列 ========== */
 
-html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-chat-stack] {
+/* 折叠态：原生「会话堆叠」按钮整组隐藏，避免和头像列重复 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-chat-stack],
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-stack-avatar],
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] button:has([data-observation-stack-avatar]) {
   display: none !important;
 }
 
@@ -305,4 +308,10 @@ html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"
   justify-content: center;
   font-size: 13px;
   color: hsl(var(--color-muted-foreground));
+}
+
+/* 折叠态下原生会话条目由头像列接管，隐藏避免重复 */
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-conversation-item],
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-conversation-avatar] {
+  display: none !important;
 }
