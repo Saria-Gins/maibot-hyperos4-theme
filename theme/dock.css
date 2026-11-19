@@ -239,3 +239,70 @@ html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"
 html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] main {
   padding-bottom: 108px !important;
 }
+
+
+/* ========== 兼容模式：折叠头像列 ========== */
+
+html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-observation-chat-stack] {
+  display: none !important;
+}
+
+#hyperos4-rail {
+  position: fixed;
+  left: 14px;
+  top: 148px;
+  bottom: 104px;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  z-index: 60;
+}
+
+#hyperos4-rail::-webkit-scrollbar {
+  display: none;
+}
+
+#hyperos4-rail button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: hsl(var(--color-muted));
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+#hyperos4-rail button:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 16px -8px rgba(17, 17, 26, 0.4);
+}
+
+#hyperos4-rail button[data-active="true"] {
+  box-shadow: 0 0 0 2px hsl(var(--color-primary));
+}
+
+#hyperos4-rail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#hyperos4-rail .hyperos4-rail-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: hsl(var(--color-muted-foreground));
+}

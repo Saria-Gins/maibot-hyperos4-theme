@@ -333,7 +333,12 @@
 
     var source = document.querySelector('aside nav ul[data-observation-keys]')
     if (!source) return
-    var links = Array.prototype.slice.call(source.querySelectorAll('a'))
+    var links = Array.prototype.slice.call(source.querySelectorAll('a')).filter(function (link, index, arr) {
+      var href = link.getAttribute('href') || ''
+      /* 插件自定义页面不进底栏，避免折叠态下条目翻倍 */
+      if (href.indexOf('/extensions') === 0) return false
+      return arr.findIndex(function (other) { return other.getAttribute('href') === href }) === index
+    }).slice(0, 8)
     if (!links.length) return
     if (dock.dataset.version !== String(links.length)) {
       dock.innerHTML = ''
@@ -360,14 +365,129 @@
       dock.dataset.version = String(links.length)
     }
     syncCompatDockActive()
+    ensureCompatRail()
+  }
+
+
+  /* 兼容模式：折叠侧栏的头像竖列（自取会话数据） */
+  var compatBotId = null
+  var compatSessions = null
+
+  function compatFetch(path) {
+    return fetch(path, { credentials: 'same-origin' }).then(function (r) { return r.json() })
+  }
+
+  function resolveBotId() {
+    if (compatBotId) return Promise.resolve(compatBotId)
+    return compatFetch('/api/host/bots').then(function (data) {
+      var bots = (data && data.bots) || []
+      var pick = bots.filter(function (b) { return b.status === 'running' })[0] || bots[0]
+      compatBotId = pick && pick.bot_id
+      return compatBotId
+    }).catch(function () { return null })
+  }
+
+  function loadCompatSessions() {
+    if (compatSessions) return Promise.resolve(compatSessions)
+    return resolveBotId().then(function (id) {
+      if (!id) return []
+      return compatFetch('/api/host/bots/' + id + '/proxy/api/chat/sessions?limit=60&offset=0')
+        .then(function (d) { compatSessions = (d && d.sessions) || []; return compatSessions })
+        .catch(function () { return [] })
+    })
+  }
+
+  function compatAvatar(id, session) {
+    var isGroup = (session.chat_type || '').indexOf('group') !== -1 || !!session.group_id
+    var key = isGroup ? 'group_id' : 'user_id'
+    var value = isGroup ? (session.group_id || session.target_id) : (session.user_id || session.target_id)
+    if (!value) return ''
+    return '/api/host/bots/' + id + '/proxy/api/webui/avatar?platform=' +
+      encodeURIComponent(session.platform || 'qq') + '&' + key + '=' + encodeURIComponent(value)
+  }
+
+  function compatGo(url) {
+    history.pushState({}, '', url)
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }
+
+  function ensureCompatRail() {
+    var collapsed = document.querySelector('aside[data-observation-sidebar][data-collapsed="true"]')
+    var compat = document.documentElement.getAttribute('data-hyperos4-dock-compat') === 'on'
+    var wanted = active() && settings.dockEnabled && compat && !!collapsed
+    var rail = document.getElementById('hyperos4-rail')
+    if (!wanted) {
+      if (rail) rail.remove()
+      return
+    }
+    if (!rail) {
+      rail = document.createElement('div')
+      rail.id = 'hyperos4-rail'
+      rail.setAttribute('aria-label', '会话头像列')
+      document.body.appendChild(rail)
+    }
+    if (rail.dataset.ready === '1') {
+      Array.prototype.forEach.call(rail.children, function (btn) {
+        btn.dataset.active = btn.dataset.href && location.pathname.indexOf('/chat') === 0 &&
+          location.search.indexOf(btn.dataset.session || '###') !== -1 ? 'true' : 'false'
+      })
+      return
+    }
+    rail.dataset.ready = '1'
+    loadCompatSessions().then(function (list) {
+      resolveBotId().then(function (id) {
+        rail.innerHTML = ''
+        function add(session, labelText) {
+          var btn = document.createElement('button')
+          btn.type = 'button'
+          btn.title = labelText || ''
+          var url = session ? compatAvatar(id, session) : ''
+          if (url) {
+            var img = document.createElement('img')
+            img.src = url
+            img.alt = labelText || ''
+            img.loading = 'lazy'
+            btn.appendChild(img)
+          } else {
+            var span = document.createElement('span')
+            span.className = 'hyperos4-rail-fallback'
+            span.textContent = (labelText || '?').slice(0, 1)
+            btn.appendChild(span)
+          }
+          var target = session ? '/chat?observe=' + encodeURIComponent(session.session_id) : '/chat'
+          btn.dataset.href = target
+          btn.dataset.session = session ? session.session_id : ''
+          btn.addEventListener('click', function () { compatGo(target) })
+          rail.appendChild(btn)
+        }
+        /* 麦麦自己：用 bot 账号头像 */
+        compatFetch('/api/host/bots/' + id + '/proxy/api/chat/info').then(function (info) {
+          var qq = info && info.bot_qq
+          var first = rail.querySelector('button')
+          if (!first || !qq) return
+          var img = document.createElement('img')
+          img.src = '/api/host/bots/' + id + '/proxy/api/webui/avatar?platform=qq&user_id=' +
+            encodeURIComponent(qq)
+          img.alt = '麦麦'
+          img.loading = 'lazy'
+          first.innerHTML = ''
+          first.appendChild(img)
+        }).catch(function () {})
+        add(null, '麦麦')
+        list.slice(0, 40).forEach(function (session) {
+          add(session, session.display_name || session.user_nickname || session.group_name || '会话')
+        })
+      })
+    })
   }
 
   function syncCompatDockActive() {
     var dock = document.getElementById('hyperos4-dock')
     if (!dock) return
     Array.prototype.forEach.call(dock.children, function (item) {
-      var path = new URL(item.href, location.origin).pathname
-      var on = path === '/' ? location.pathname === '/' : location.pathname.indexOf(path) === 0
+      var source = document.querySelector('aside nav ul[data-observation-keys] a[href="' + item.getAttribute('href') + '"]')
+      var on = source ? source.getAttribute('data-active') === 'true'
+        : (item.href === location.origin + location.pathname)
       item.dataset.active = on ? 'true' : 'false'
     })
   }
