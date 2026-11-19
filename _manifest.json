@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "id": "github.Saria-Gins.maibot-hyperos4-theme",
-  "version": "6.5.1",
+  "version": "6.5.2",
   "name": "麦麦 HyperOS 4 主题",
   "description": "MaiBot WebUI 的 HyperOS 4 风格：内置 MiSans 字体、28px 圆角、胶囊控件、浅蓝选中态与底部悬浮底栏。",
   "author": {

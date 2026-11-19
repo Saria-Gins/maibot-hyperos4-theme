@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.5.2
+
+- 停用插件（先停用再卸载）时也会还原官方 dist：`_remove()` 的两条提前返回路径都补上 `_restore_dashboard_build()`，避免宿主 dist 停留在插件内置构建
+
 ## 6.5.1
 
 - 底栏恢复显示插件自定义页面入口（去掉 `/extensions` 过滤规则）

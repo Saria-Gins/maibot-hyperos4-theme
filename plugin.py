@@ -315,11 +315,13 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
     def _remove(self) -> bool:
         index = self._dist_index()
         if not index.is_file():
+            self._restore_dashboard_build()
             return False
         html = index.read_text(encoding="utf-8")
         cleaned = FONT_LINK_RE.sub("", SCRIPT_RE.sub("", STYLE_RE.sub("", html)))
         if cleaned == html:
             self._uninstall_fonts()
+            self._restore_dashboard_build()
             return False
         index.write_text(cleaned, encoding="utf-8")
         self._uninstall_fonts()
