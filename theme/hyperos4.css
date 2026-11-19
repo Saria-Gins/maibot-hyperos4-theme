@@ -181,7 +181,7 @@ html[data-hyperos4="on"] a[role="button"]:active {
   transform: scale(0.972);
 }
 
-html[data-hyperos4="on"] button[class*="bg-primary"]:not([data-dashboard-option-card]) {
+html[data-hyperos4="on"] button[class*="bg-primary"]:not([data-dashboard-option-card]):not([role="switch"]) {
   background-image: var(--color-primary-gradient) !important;
   border-color: transparent !important;
   box-shadow: 0 8px 20px -10px hsl(var(--color-primary) / 0.8) !important;
