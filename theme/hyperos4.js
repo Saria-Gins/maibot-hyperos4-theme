@@ -338,19 +338,21 @@
       /* 插件自定义页面不进底栏，避免折叠态下条目翻倍 */
       if (href.indexOf('/extensions') === 0) return false
       return arr.findIndex(function (other) { return other.getAttribute('href') === href }) === index
-    }).slice(0, 8)
+    })
     if (!links.length) return
     if (dock.dataset.version !== String(links.length)) {
       dock.innerHTML = ''
       links.forEach(function (link) {
         var item = document.createElement('a')
         item.href = link.getAttribute('href') || '/'
-        var svg = link.querySelector('svg')
-        if (svg) item.appendChild(svg.cloneNode(true))
-        var label = (link.getAttribute('aria-label') || link.textContent || '').trim()
-        var text = document.createElement('span')
-        text.textContent = label.replace(/设置$/, '').replace(/管理$/, '').replace(/^长期记忆$/, '记忆')
-        item.appendChild(text)
+        /* 直接克隆源链接的内部结构：图标、短标签、提示点都与原生一致 */
+        item.innerHTML = link.innerHTML
+        item.setAttribute('aria-label', link.getAttribute('aria-label') || '')
+        if (!item.querySelector('[data-observation-key-label]')) {
+          var text = document.createElement('span')
+          text.textContent = (link.getAttribute('aria-label') || '').replace(/设置$/, '')
+          item.appendChild(text)
+        }
         item.addEventListener('click', function (event) {
           event.preventDefault()
           var path = new URL(item.href, location.origin).pathname
