@@ -526,22 +526,40 @@ html[data-hyperos4="on"] aside[data-observation-sidebar] > div:first-child {
   padding-top: 6px !important;
 }
 
-/* 会话行：圆角卡片、悬停浅灰、选中浅蓝 */
-html[data-hyperos4="on"] [data-observation-conversation-list] a,
-html[data-hyperos4="on"] [data-observation-conversation-list] button {
+/* 会话行：不改内边距（避免选中块错位），只用强调色表达状态 */
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item] {
   border-radius: 18px !important;
-  padding: 8px 10px !important;
-  transition: background-color 0.16s ease, transform 0.16s ease !important;
+  transition: background-color 0.16s ease !important;
 }
 
-html[data-hyperos4="on"] [data-observation-conversation-list] a:hover,
-html[data-hyperos4="on"] [data-observation-conversation-list] button:hover {
-  background: hsl(var(--color-muted)) !important;
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item]:hover {
+  background-color: hsl(var(--color-muted)) !important;
 }
 
-html[data-hyperos4="on"] [data-observation-conversation-list] a[data-active="true"],
-html[data-hyperos4="on"] [data-observation-conversation-list] button[data-active="true"] {
-  background: hsl(var(--color-primary) / 0.12) !important;
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item][data-selected="true"] {
+  background-color: hsl(var(--color-primary) / 0.12) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* 选中行文字回到前景色，避免原生白字压在浅蓝底上 */
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item][data-selected="true"] {
+  color: hsl(var(--color-foreground)) !important;
+}
+
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item][data-selected="true"] [data-conversation-name] {
+  color: hsl(var(--color-foreground)) !important;
+}
+
+/* 折叠头像：悬停/选中统一用强调色描边，避免原生绿色环 */
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-avatar] {
+  border-color: transparent !important;
+}
+
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item]:hover [data-conversation-avatar],
+html[data-hyperos4="on"] [data-observation-conversation-list] [data-conversation-item][data-selected="true"] [data-conversation-avatar] {
+  border-color: transparent !important;
+  box-shadow: 0 0 0 2px hsl(var(--color-primary)) !important;
 }
 
 /* 头像：HyperOS 的圆角方 */
