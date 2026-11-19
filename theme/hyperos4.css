@@ -935,3 +935,23 @@ html[data-hyperos4="on"] aside[data-observation-sidebar][data-collapsed="true"] 
   height: 0 !important;
   display: none !important;
 }
+
+/* 分页：当前页用主色实心，明确「我在第几页」 */
+html[data-hyperos4="on"] [data-hyperos4-pager="true"][aria-pressed="true"] {
+  background-color: hsl(var(--color-primary)) !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  border-color: transparent !important;
+  font-weight: 600 !important;
+  box-shadow: 0 6px 14px -8px hsl(var(--color-primary) / 0.85) !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-pager="true"][aria-pressed="false"] {
+  background-color: hsl(var(--color-muted)) !important;
+  color: hsl(var(--color-muted-foreground)) !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-pager="true"][aria-pressed="false"]:hover {
+  background-color: hsl(var(--color-accent)) !important;
+  color: hsl(var(--color-accent-foreground)) !important;
+}
+

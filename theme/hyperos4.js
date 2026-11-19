@@ -495,6 +495,34 @@
   }
 
   /* 底栏由 dashboard 源码渲染，这里保持空实现 */
+
+  /* 标记分页按钮，便于 CSS 高亮当前页 */
+  function markPager() {
+    if (!active()) return
+    var nodes = document.querySelectorAll('*')
+    var label = null
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i]
+      if (node.children.length === 0 && (node.textContent || '').trim() === '每页') {
+        label = node
+        break
+      }
+    }
+    if (!label) return
+    var box = label.parentElement
+    for (var depth = 0; depth < 3 && box && box.querySelectorAll('button').length < 4; depth++) {
+      box = box.parentElement
+    }
+    if (!box) return
+    var buttons = box.querySelectorAll('button')
+    for (var j = 0; j < buttons.length; j++) {
+      var text = (buttons[j].textContent || '').trim()
+      if (/^\d+$/.test(text) || text === '') {
+        buttons[j].setAttribute('data-hyperos4-pager', 'true')
+      }
+    }
+  }
+
   function syncDock() {}
 
   /* ---------------------------------------------------------------- 输入条 */
@@ -735,6 +763,7 @@
       ensurePanel()
       ensureCard()
       syncDock()
+      markPager()
       ensureCompatDock()
       markComposer()
       syncFab()
@@ -748,6 +777,7 @@
     ensurePanel()
     ensureCard()
     syncDock()
+    markPager()
     ensureCompatDock()
     markComposer()
     syncFab()
