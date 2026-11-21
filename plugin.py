@@ -151,6 +151,12 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
         except Exception:
             return None
 
+    def _official_backup_path(self, version: str | None) -> Path:
+        """官方 dist 备份文件路径；按 dashboard 版本区分，避免跨版本还原错。"""
+
+        suffix = f"-{version}" if version else ""
+        return self._dist_index().parent.parent / f"maibot_dashboard_dist_official{suffix}.zip"
+
     def _deploy_dashboard_build(self) -> str:
         """dashboard 版本匹配时，把插件内置的构建铺进 dist，直接获得源码模式。
 
@@ -178,8 +184,9 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
         if not zip_path.is_file():
             return "skipped-no-build"
 
-        backup = dist.parent / "maibot_dashboard_dist_official.zip"
-        if not backup.is_file():
+        backup = self._official_backup_path(target_version)
+        marker_present = any(dist.glob(".hyperos4-build-*"))
+        if not backup.is_file() and not marker_present:
             tmp = backup.with_suffix(".tmp")
             with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zf:
                 for item in dist.rglob("*"):
@@ -221,7 +228,10 @@ class HyperOS4ThemePlugin(MaiBotPlugin):
 
         index = self._dist_index()
         dist = index.parent
-        backup = dist.parent / "maibot_dashboard_dist_official.zip"
+        backup = self._official_backup_path(self._installed_dashboard_version())
+        if not backup.is_file():
+            candidates = sorted(dist.parent.glob("maibot_dashboard_dist_official*.zip"), reverse=True)
+            backup = candidates[0] if candidates else backup
         if not backup.is_file():
             return False
         staging = dist.parent / "maibot_dashboard_dist_restore"

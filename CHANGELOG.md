@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.6.1
+
+- 官方 dist 备份按 dashboard 版本区分（`maibot_dashboard_dist_official-<版本>.zip`），跨版本升级后卸载不再还原成旧构建
+- 仅当 dist 未被插件接管（无 `.hyperos4-build-*` 标记）时才生成备份，避免把插件构建误存为官方
+- 还原时优先使用与已安装 dashboard 版本匹配的备份，缺失则回退到最近一份
+
 ## 6.6.0
 
 - 内置构建升级到 Dashboard 1.10.8（配合 MaiBot 1.4.8），源码模式补丁按新结构重写
