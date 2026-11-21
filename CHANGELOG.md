@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.6.2
+
+- 新增插件图标（`assets/icon.png`，HyperOS 风格蓝渐变圆角方块 + 白色 H），通过 manifest `display.icon` 生效
+
 ## 6.6.1
 
 - 官方 dist 备份按 dashboard 版本区分（`maibot_dashboard_dist_official-<版本>.zip`），跨版本升级后卸载不再还原成旧构建
