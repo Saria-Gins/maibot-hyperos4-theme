@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.6.0
+
+- 内置构建升级到 Dashboard 1.10.8（配合 MaiBot 1.4.8），源码模式补丁按新结构重写
+- 侧栏补丁统一为 `useHyperosTheme/useHyperosDock` + `hyperosBar` 单一实现
+
 ## 6.5.3
 
 - 分页控件高亮当前页：主题脚本标记分页按钮，当前页用主色实心 + 白字，其余为浅灰；翻页后自动跟随
