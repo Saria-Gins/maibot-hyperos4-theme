@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.6.3
+
+- 外观页「界面风格」里的 HyperOS 4 卡片图标改为 HyperOS 环形标记（三段弧 + 中心点），替换原来的太阳图标
+
 ## 6.6.2
 
 - 新增插件图标（`assets/icon.png`，HyperOS 风格蓝渐变圆角方块 + 白色 H），通过 manifest `display.icon` 生效
