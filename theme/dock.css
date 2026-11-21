@@ -116,43 +116,6 @@ html[data-hyperos4="on"] aside[data-observation-sidebar] [data-observation-rule=
   display: none !important;
 }
 
-/* 折叠态：头像列表样式，只留头像，隐藏文字 */
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] {
-  padding: 4px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-}
-
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] > * {
-  width: 44px !important;
-  justify-content: center !important;
-}
-
-/* 折叠列表里只隐藏文字标签，头像保留 */
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] [data-observation-key-label] {
-  display: none !important;
-}
-
-
-/* 折叠态头像列表：给足高度与滚动 */
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] nav[data-observation-conversation-list] {
-  height: 100% !important;
-  min-height: 0 !important;
-}
-
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] {
-  overflow: visible !important;
-}
-
-/* 折叠时不要竖排小节标题 */
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] [data-observation-list-section],
-html[data-hyperos4="on"][data-hyperos4-dock="on"] aside[data-observation-sidebar][data-collapsed="true"] [data-hyperos4-collapsed-list="true"] h3 {
-  display: none !important;
-}
-
-
 /* 底栏关闭：入口留在侧栏，套用同一套 HyperOS 药丸样式 */
 html[data-hyperos4="on"]:not([data-hyperos4-dock="on"]) aside[data-observation-sidebar] nav ul[data-observation-keys] a[data-observation-key] {
   border-radius: calc(var(--visual-radius-md) * 0.78) !important;
@@ -335,4 +298,110 @@ html[data-hyperos4="on"]:has(aside[data-observation-sidebar][data-collapsed="tru
 html[data-hyperos4="on"]:has(aside[data-observation-sidebar][data-collapsed="true"]) #hyperos4-dock a {
   height: 44px !important;
   justify-content: center !important;
+}
+/* ===== 折叠头像列（按真实 DOM，v3） ===== */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px 0 !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] > div[title] {
+  width: 40px !important;
+  height: 40px !important;
+  margin: 0 !important;
+}
+
+/* 条目本体：固定 40×40，描边画在这一层，跟随圆角 */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item] {
+  width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 13px !important;
+  overflow: visible !important;
+  outline: 1px solid hsl(var(--color-border) / 0.55);
+  outline-offset: 0;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item] > button {
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border-radius: 13px !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item]:hover {
+  outline: 1px solid hsl(var(--color-primary) / 0.5);
+}
+
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item][data-selected="true"] {
+  outline: 2px solid hsl(var(--color-primary));
+}
+
+/* 头像壳：只管圆角与裁切 */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-avatar] {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  border-radius: 13px !important;
+  overflow: hidden !important;
+  background-color: hsl(var(--color-card)) !important;
+  box-shadow: none !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-avatar] img {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 13px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  background-color: transparent !important;
+}
+
+/* 折叠态不显示文字容器，避免撑高条目 */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item-content] {
+  display: none !important;
+}
+
+/* 覆盖 hyperos4.css 里对 [data-conversation-avatar] 的 2px 主色描边（否则双重描边） */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item] [data-conversation-avatar],
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item][data-selected="true"] [data-conversation-avatar],
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-item]:hover [data-conversation-avatar] {
+  box-shadow: none !important;
+  border: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+/* 图片精确填满 40×40，避免 38px 造成的内部白圈 */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-conversation-avatar] img {
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  object-fit: contain !important;
+  border-radius: 13px !important;
+  box-shadow: none !important;
+}
+
+/* 折叠态不显示小节标题（否则竖排文字挤在头像列里） */
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] h3,
+html[data-hyperos4="on"] [data-hyperos4-collapsed-list="true"] [data-observation-list-section] {
+  display: none !important;
 }

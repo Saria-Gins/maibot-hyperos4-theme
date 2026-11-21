@@ -495,6 +495,45 @@
 
   /* 底栏由 dashboard 源码渲染，这里保持空实现 */
 
+
+
+
+  /* 统一字号：把零散的字号吸附到 12/13/14/15/16/18/22/26 这套刻度上 */
+  var TYPE_SCALE = [12, 13, 14, 15, 16, 18, 22, 26]
+
+  function snapTypeSize(px) {
+    var best = TYPE_SCALE[0]
+    var bestGap = Math.abs(px - best)
+    for (var i = 1; i < TYPE_SCALE.length; i++) {
+      var gap = Math.abs(px - TYPE_SCALE[i])
+      if (gap < bestGap) {
+        bestGap = gap
+        best = TYPE_SCALE[i]
+      }
+    }
+    return best
+  }
+
+  function normalizeType() {
+    if (!active()) return
+    var nodes = document.querySelectorAll('body *')
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i]
+      if (el.children.length || !el.firstChild || el.firstChild.nodeType !== 3) continue
+      var text = (el.textContent || '').trim()
+      if (!text) continue
+      var cs = getComputedStyle(el)
+      var size = parseFloat(cs.fontSize)
+      if (!isFinite(size) || size <= 0) continue
+      // 超过 30px 的多为展示性大数字/标题，保持原样
+      if (size >= 30) continue
+      var target = snapTypeSize(size)
+      if (Math.abs(target - size) < 0.6) continue
+      el.style.setProperty('font-size', target + 'px', 'important')
+      el.style.setProperty('line-height', target <= 14 ? '1.55' : '1.4', 'important')
+    }
+  }
+
   /* 标记分页按钮，便于 CSS 高亮当前页 */
   function markPager() {
     if (!active()) return
@@ -520,6 +559,89 @@
         buttons[j].setAttribute('data-hyperos4-pager', 'true')
       }
     }
+  }
+
+
+  /* 通讯录等页面的数字分页：读取原生「x / y」并渲染胶囊，点击驱动跳页弹窗 */
+  function buildNumberPager() {
+    if (!active()) return
+    var nav = document.querySelector('nav[aria-label="数据分页"]')
+    if (!nav) return
+    var indicator = nav.querySelector('button[aria-label="跳转到指定页"]')
+    if (!indicator) return
+    var match = /(\d+)\s*\/\s*(\d+)/.exec(indicator.textContent || '')
+    if (!match) return
+    var current = Number(match[1])
+    var total = Number(match[2])
+    if (!total || total < 2) return
+
+    var signature = current + '/' + total
+    var host = nav.querySelector('[data-hyperos4-numpager]')
+    if (host && host.dataset.signature === signature) return
+    if (!host) {
+      host = document.createElement('div')
+      host.setAttribute('data-hyperos4-numpager', 'true')
+      nav.insertBefore(host, nav.firstChild)
+    }
+    host.dataset.signature = signature
+    host.innerHTML = ''
+    nav.classList.add('hyperos4-pager-built')
+
+    function jump(page) {
+      if (page < 1 || page > total || page === current) return
+      document.documentElement.classList.add('hyperos4-pager-busy')
+      indicator.click()
+      setTimeout(function () {
+        var dialog = document.querySelector('[role="dialog"]')
+        var input = dialog && dialog.querySelector('input[type="number"]')
+        var confirm = dialog && dialog.querySelector('button')
+        if (input && confirm) {
+          /* React 受控组件需要走原生 setter，否则值不会被状态接收 */
+          var setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set
+          setter.call(input, String(page))
+          input.dispatchEvent(new Event('input', { bubbles: true }))
+          input.dispatchEvent(new Event('change', { bubbles: true }))
+          confirm.click()
+        }
+        setTimeout(function () {
+          document.documentElement.classList.remove('hyperos4-pager-busy')
+        }, 400)
+      }, 60)
+    }
+
+    function pill(label, page, opts) {
+      var btn = document.createElement('button')
+      btn.type = 'button'
+      btn.textContent = label
+      btn.className = 'hyperos4-numpager-pill'
+      if (opts && opts.active) btn.dataset.active = 'true'
+      if (opts && opts.edge) btn.dataset.edge = 'true'
+      if (opts && opts.disabled) {
+        btn.disabled = true
+        btn.dataset.disabled = 'true'
+      } else {
+        btn.addEventListener('click', function () { jump(page) })
+      }
+      host.appendChild(btn)
+    }
+
+    pill('‹', current - 1, { edge: true, disabled: current <= 1 })
+    var pages = []
+    for (var p = 1; p <= total; p++) {
+      if (p === 1 || p === total || Math.abs(p - current) <= 1) pages.push(p)
+      else if (pages[pages.length - 1] !== 'gap') pages.push('gap')
+    }
+    pages.forEach(function (item) {
+      if (item === 'gap') {
+        var dots = document.createElement('span')
+        dots.className = 'hyperos4-numpager-gap'
+        dots.textContent = '…'
+        host.appendChild(dots)
+      } else {
+        pill(String(item), item, { active: item === current })
+      }
+    })
+    pill('›', current + 1, { edge: true, disabled: current >= total })
   }
 
   function syncDock() {}
@@ -763,6 +885,9 @@
       ensureCard()
       syncDock()
       markPager()
+    normalizeType()
+      normalizeType()
+      buildNumberPager()
       ensureCompatDock()
       markComposer()
       syncFab()
@@ -777,6 +902,7 @@
     ensureCard()
     syncDock()
     markPager()
+    buildNumberPager()
     ensureCompatDock()
     markComposer()
     syncFab()

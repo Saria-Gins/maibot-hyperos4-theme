@@ -955,3 +955,235 @@ html[data-hyperos4="on"] [data-hyperos4-pager="true"][aria-pressed="false"]:hove
   color: hsl(var(--color-accent-foreground)) !important;
 }
 
+
+/* 通讯录等页面的「上一页 / 页码 / 下一页」分页：与学习页同一套视觉 */
+html[data-hyperos4="on"] nav[aria-label="数据分页"] > button {
+  height: 32px !important;
+  min-width: 32px !important;
+  padding: 0 10px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background-color: hsl(var(--color-muted)) !important;
+  color: hsl(var(--color-muted-foreground)) !important;
+  font-weight: 500 !important;
+  transition: background-color 0.16s ease, color 0.16s ease !important;
+}
+
+html[data-hyperos4="on"] nav[aria-label="数据分页"] > button:hover:not(:disabled) {
+  background-color: hsl(var(--color-accent)) !important;
+  color: hsl(var(--color-accent-foreground)) !important;
+}
+
+html[data-hyperos4="on"] nav[aria-label="数据分页"] > button:disabled {
+  opacity: 0.45 !important;
+}
+
+html[data-hyperos4="on"] nav[aria-label="数据分页"] > button[aria-label="跳转到指定页"] {
+  background-color: hsl(var(--color-primary)) !important;
+  color: hsl(var(--color-primary-foreground)) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 6px 14px -8px hsl(var(--color-primary) / 0.85) !important;
+}
+
+/* 每页条数下拉：胶囊化 */
+html[data-hyperos4="on"] nav[aria-label="数据分页"] > button[role="combobox"] {
+  height: 32px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background-color: hsl(var(--color-card)) !important;
+  padding-inline: 12px !important;
+  color: hsl(var(--color-foreground) / 0.75) !important;
+}
+
+
+/* 数字分页（通讯录等页面，学习页同款胶囊） */
+html[data-hyperos4="on"] nav[aria-label="数据分页"].hyperos4-pager-built > button[aria-label="上一页"],
+html[data-hyperos4="on"] nav[aria-label="数据分页"].hyperos4-pager-built > button[aria-label="下一页"],
+html[data-hyperos4="on"] nav[aria-label="数据分页"].hyperos4-pager-built > button[aria-label="跳转到指定页"] {
+  display: none !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-numpager="true"] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 6px;
+}
+
+html[data-hyperos4="on"] .hyperos4-numpager-pill {
+  height: 32px;
+  min-width: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background-color: hsl(var(--color-muted));
+  color: hsl(var(--color-muted-foreground));
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+html[data-hyperos4="on"] .hyperos4-numpager-pill:hover:not([data-disabled="true"]) {
+  background-color: hsl(var(--color-accent));
+  color: hsl(var(--color-accent-foreground));
+}
+
+html[data-hyperos4="on"] .hyperos4-numpager-pill[data-active="true"] {
+  background-color: hsl(var(--color-primary));
+  color: hsl(var(--color-primary-foreground));
+  font-weight: 600;
+  box-shadow: 0 6px 14px -8px hsl(var(--color-primary) / 0.85);
+}
+
+html[data-hyperos4="on"] .hyperos4-numpager-pill[data-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+html[data-hyperos4="on"] .hyperos4-numpager-gap {
+  color: hsl(var(--color-muted-foreground));
+  padding: 0 2px;
+}
+
+/* 自动跳页期间隐藏弹窗，避免闪烁 */
+html.hyperos4-pager-busy [role="dialog"],
+html.hyperos4-pager-busy [data-dashboard-dialog-overlay] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+/* ===== HyperOS 全站打磨 v1 ===== */
+
+/* 1. 字体与标题：更收紧的字距，标题更「实」 */
+html[data-hyperos4="on"] body {
+  font-feature-settings: "tnum" 1, "ss01" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[data-hyperos4="on"] h1,
+html[data-hyperos4="on"] h2,
+html[data-hyperos4="on"] h3 {
+  letter-spacing: -0.012em;
+  font-weight: 600;
+}
+
+/* 2. 卡片：大圆角 + 双层柔和阴影 + 发丝描边 */
+html[data-hyperos4="on"] [class*="rounded-xl"][class*="border"],
+html[data-hyperos4="on"] [class*="rounded-lg"][class*="border"],
+html[data-hyperos4="on"] [class*="rounded-2xl"][class*="border"] {
+  border-radius: 22px !important;
+  border-color: hsl(var(--color-border) / 0.55) !important;
+  background-color: hsl(var(--color-card)) !important;
+  box-shadow:
+    0 1px 2px hsl(var(--color-foreground) / 0.04),
+    0 12px 28px -22px hsl(var(--color-foreground) / 0.35) !important;
+}
+
+/* 卡片内嵌小卡（学习页那种 p-3 的小块）不要重复堆阴影 */
+html[data-hyperos4="on"] [class*="rounded-lg"][class*="border"][class*="p-3"] {
+  border-radius: 16px !important;
+  background-color: hsl(var(--color-card)) !important;
+  box-shadow: none !important;
+}
+
+/* 3. 控件：按钮更圆、输入框更柔 */
+html[data-hyperos4="on"] button[class*="rounded-md"],
+html[data-hyperos4="on"] a[class*="rounded-md"] {
+  border-radius: 14px !important;
+  transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease !important;
+}
+
+html[data-hyperos4="on"] input:not([type="checkbox"]):not([type="radio"]),
+html[data-hyperos4="on"] textarea,
+html[data-hyperos4="on"] [class*="rounded-md"][class*="border"][role="combobox"] {
+  border-radius: 14px !important;
+  border-color: hsl(var(--color-border) / 0.7) !important;
+  background-color: hsl(var(--color-card)) !important;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease !important;
+}
+
+html[data-hyperos4="on"] input:focus-visible,
+html[data-hyperos4="on"] textarea:focus-visible {
+  border-color: hsl(var(--color-primary) / 0.6) !important;
+  box-shadow: 0 0 0 3px hsl(var(--color-primary) / 0.15) !important;
+  outline: none !important;
+}
+
+/* 4. 标签页 / 分段控件：胶囊化 */
+html[data-hyperos4="on"] [role="tablist"] {
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background-color: hsl(var(--color-muted) / 0.6);
+}
+
+html[data-hyperos4="on"] [role="tablist"] [role="tab"] {
+  border-radius: 999px !important;
+  border: 0 !important;
+  transition: background-color 0.16s ease, color 0.16s ease !important;
+}
+
+html[data-hyperos4="on"] [role="tablist"] [role="tab"][data-state="active"],
+html[data-hyperos4="on"] [role="tablist"] [role="tab"][aria-selected="true"] {
+  background-color: hsl(var(--color-card)) !important;
+  color: hsl(var(--color-primary)) !important;
+  box-shadow: 0 2px 8px -6px hsl(var(--color-foreground) / 0.5) !important;
+}
+
+/* 5. 列表：行悬停染色 + 发丝分隔 */
+html[data-hyperos4="on"] tr[class*="border-b"] {
+  border-color: hsl(var(--color-border) / 0.45) !important;
+}
+
+html[data-hyperos4="on"] tr[class*="hover:bg"]:hover,
+html[data-hyperos4="on"] li[class*="hover:bg"]:hover {
+  background-color: hsl(var(--color-accent) / 0.55) !important;
+}
+
+/* 6. 徽标 / 状态点：统一胶囊与小圆点 */
+html[data-hyperos4="on"] [class*="rounded-full"][class*="border"][class*="px-"] {
+  border-color: hsl(var(--color-border) / 0.6) !important;
+  background-color: hsl(var(--color-muted) / 0.7) !important;
+}
+
+/* 7. 数字：等宽，统计更整齐 */
+html[data-hyperos4="on"] [class*="tabular-nums"],
+html[data-hyperos4="on"] [class*="text-2xl"],
+html[data-hyperos4="on"] [class*="text-3xl"] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* 8. 滚动条：细、圆、低对比 */
+html[data-hyperos4="on"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html[data-hyperos4="on"] ::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--color-foreground) / 0.16);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+html[data-hyperos4="on"] ::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--color-foreground) / 0.26);
+}
+
+html[data-hyperos4="on"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 9. 焦点可见性：主色细环 */
+html[data-hyperos4="on"] :focus-visible {
+  outline: 2px solid hsl(var(--color-primary) / 0.55);
+  outline-offset: 2px;
+}
+
+/* 10. 分裂线：统一发丝色 */
+html[data-hyperos4="on"] hr,
+html[data-hyperos4="on"] [class*="border-t"],
+html[data-hyperos4="on"] [class*="border-b"] {
+  border-color: hsl(var(--color-border) / 0.5);
+}
