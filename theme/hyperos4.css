@@ -153,7 +153,6 @@ html[data-hyperos4="on"] [class*="bg-popover"] {
 
 html[data-hyperos4="on"] [class*="rounded"][class*="border"]:not(button):not(a):not(span) {
   border-color: hsl(var(--color-border) / 0.72) !important;
-  contain: paint;
 }
 
 /* —— 侧栏：玻璃层 —— */
