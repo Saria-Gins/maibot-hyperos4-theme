@@ -106,18 +106,27 @@
     }
   }
 
+  var styleCache = Object.create(null)
+
+  function setVarIfChanged(root, name, value) {
+    if (styleCache[name] === value) return
+    styleCache[name] = value
+    root.style.setProperty(name, value)
+  }
+
   function apply() {
     var root = document.documentElement
     var accent = ACCENTS[settings.accent] || ACCENTS.blue
     root.dataset.hyperos4 = active() ? 'on' : 'off'
     root.dataset.hyperos4Dock = active() && settings.dockEnabled ? 'on' : 'off'
-    root.style.setProperty('--hyperos4-accent-h', String(accent.hue))
-    root.style.setProperty('--hyperos4-accent-h2', String(accent.hue2))
-    root.style.setProperty('--hyperos4-radius', settings.radius + 'px')
-    root.style.setProperty('--hyperos4-blur', settings.blur + 'px')
-    root.style.setProperty('--hyperos4-tint', String(settings.tint / 100))
-    root.style.setProperty('--hyperos4-dock-blur', settings.dockBlur + 'px')
-    root.style.setProperty('--hyperos4-dock-alpha', settings.dockGlass ? '0.38' : '1')
+    // 只在值真正变化时写变量：每次写入都会触发全站样式重算
+    setVarIfChanged(root, '--hyperos4-accent-h', String(accent.hue))
+    setVarIfChanged(root, '--hyperos4-accent-h2', String(accent.hue2))
+    setVarIfChanged(root, '--hyperos4-radius', settings.radius + 'px')
+    setVarIfChanged(root, '--hyperos4-blur', settings.blur + 'px')
+    setVarIfChanged(root, '--hyperos4-tint', String(settings.tint / 100))
+    setVarIfChanged(root, '--hyperos4-dock-blur', settings.dockBlur + 'px')
+    setVarIfChanged(root, '--hyperos4-dock-alpha', settings.dockGlass ? '0.38' : '1')
     if (!active()) {
       /* 主题关闭时把标记类清掉，避免影响其它界面风格 */
       var staleComposer = document.querySelector('.hyperos4-composer')
@@ -514,14 +523,24 @@
     return best
   }
 
+  var typeDone = typeof WeakSet === 'function' ? new WeakSet() : null
+
   function normalizeType() {
     if (!active()) return
     var nodes = document.querySelectorAll('body *')
     for (var i = 0; i < nodes.length; i++) {
       var el = nodes[i]
-      if (el.children.length || !el.firstChild || el.firstChild.nodeType !== 3) continue
+      if (typeDone && typeDone.has(el)) continue
+      if (el.children.length || !el.firstChild || el.firstChild.nodeType !== 3) {
+        if (typeDone) typeDone.add(el)
+        continue
+      }
       var text = (el.textContent || '').trim()
-      if (!text) continue
+      if (!text) {
+        if (typeDone) typeDone.add(el)
+        continue
+      }
+      if (typeDone) typeDone.add(el)
       var cs = getComputedStyle(el)
       var size = parseFloat(cs.fontSize)
       if (!isFinite(size) || size <= 0) continue
@@ -531,6 +550,37 @@
       if (Math.abs(target - size) < 0.6) continue
       el.style.setProperty('font-size', target + 'px', 'important')
       el.style.setProperty('line-height', target <= 14 ? '1.55' : '1.4', 'important')
+    }
+  }
+
+  var lastNormalizeAt = 0
+  var lastPagerAt = 0
+  var lastPath = ''
+
+  function idleRun(fn) {
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(fn, { timeout: 1200 })
+    } else {
+      setTimeout(fn, 60)
+    }
+  }
+
+  function runHeavyTasks() {
+    var now = Date.now()
+    var path = location.pathname
+    var routeChanged = path !== lastPath
+    if (routeChanged) {
+      lastPath = path
+      if (typeDone) typeDone = new WeakSet()
+    }
+    if (routeChanged || now - lastPagerAt > 1200) {
+      lastPagerAt = now
+      markPager()
+      buildNumberPager()
+    }
+    if (routeChanged || now - lastNormalizeAt > 2500) {
+      lastNormalizeAt = now
+      idleRun(normalizeType)
     }
   }
 
@@ -875,27 +925,48 @@
     }
   }
 
+
+  /* 滚动期间临时关闭磨砂，停止滚动后再恢复 */
+  var scrollTimer = null
+
+  function watchScroll() {
+    if (watchScroll.done) return
+    watchScroll.done = true
+    var root = document.documentElement
+    var onScroll = function () {
+      if (root.getAttribute('data-hyperos4-scrolling') !== 'on') {
+        root.setAttribute('data-hyperos4-scrolling', 'on')
+      }
+      if (scrollTimer) clearTimeout(scrollTimer)
+      scrollTimer = setTimeout(function () {
+        scrollTimer = null
+        root.removeAttribute('data-hyperos4-scrolling')
+      }, 160)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true })
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true })
+  }
+
   var pending = null
   function schedule() {
     if (pending) return
     pending = setTimeout(function () {
       pending = null
+      if (document.hidden) return
       apply()
       ensurePanel()
       ensureCard()
       syncDock()
-      markPager()
-    normalizeType()
-      normalizeType()
-      buildNumberPager()
       ensureCompatDock()
       markComposer()
       syncFab()
+      runHeavyTasks()
     }, 180)
   }
 
   function start() {
     apply()
+    watchScroll()
     if (active()) syncServerStyle(false)
     watchAppCardClicks()
     ensurePanel()

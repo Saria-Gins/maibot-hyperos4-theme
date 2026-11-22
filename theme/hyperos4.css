@@ -146,14 +146,14 @@ html.dark:not([data-hyperos4="off"]) body {
 }
 
 /* —— 卡片与面板：半透明磨砂 —— */
-html[data-hyperos4="on"] [class*="bg-card"],
+/* 只给浮层做磨砂；普通卡片用实色，避免大面积 backdrop-filter 拖慢滚动 */
 html[data-hyperos4="on"] [class*="bg-popover"] {
-  backdrop-filter: blur(var(--hyperos4-blur)) saturate(1.6);
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 0.6)) saturate(1.4);
 }
 
 html[data-hyperos4="on"] [class*="rounded"][class*="border"]:not(button):not(a):not(span) {
   border-color: hsl(var(--color-border) / 0.72) !important;
-  backdrop-filter: blur(var(--hyperos4-blur)) saturate(1.5);
+  contain: paint;
 }
 
 /* —— 侧栏：玻璃层 —— */
@@ -1186,4 +1186,12 @@ html[data-hyperos4="on"] hr,
 html[data-hyperos4="on"] [class*="border-t"],
 html[data-hyperos4="on"] [class*="border-b"] {
   border-color: hsl(var(--color-border) / 0.5);
+}
+
+/* 滚动期间关闭大面积磨砂，避免掉帧；停止滚动 160ms 后恢复 */
+html[data-hyperos4="on"][data-hyperos4-scrolling="on"] aside[data-observation-sidebar],
+html[data-hyperos4="on"][data-hyperos4-scrolling="on"] header,
+html[data-hyperos4="on"][data-hyperos4-scrolling="on"] nav[class*="border"],
+html[data-hyperos4="on"][data-hyperos4-scrolling="on"] #hyperos4-dock {
+  backdrop-filter: none !important;
 }
