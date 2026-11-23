@@ -37,7 +37,7 @@ html[data-hyperos4="on"] aside[data-observation-sidebar] nav ul[data-hyperos4-do
   padding: 8px 12px !important;
   grid-template-rows: none !important;
   background: hsl(var(--color-card) / var(--hyperos4-dock-alpha, 0.38)) !important;
-  backdrop-filter: blur(var(--hyperos4-dock-blur, 24px)) saturate(1.8) !important;
+  backdrop-filter: blur(var(--hyperos4-dock-blur, 18px)) saturate(1.8) !important;
   border: 1px solid hsl(var(--color-border) / 0.55) !important;
   border-radius: 999px !important;
   box-shadow: 0 24px 60px -28px rgba(16, 18, 27, 0.45), 0 6px 18px -12px rgba(16, 18, 27, 0.3) !important;
@@ -166,7 +166,7 @@ html[data-hyperos4="on"][data-hyperos4-dock="on"][data-hyperos4-dock-compat="on"
   border-radius: 999px;
   border: 1px solid hsl(var(--color-border) / 0.55);
   background: hsl(var(--color-card) / var(--hyperos4-dock-alpha, 0.38));
-  backdrop-filter: blur(var(--hyperos4-dock-blur, 24px)) saturate(1.8);
+  backdrop-filter: blur(var(--hyperos4-dock-blur, 18px)) saturate(1.8);
   box-shadow: 0 24px 60px -28px rgba(16, 18, 27, 0.45), 0 6px 18px -12px rgba(16, 18, 27, 0.3);
   z-index: 70;
 }

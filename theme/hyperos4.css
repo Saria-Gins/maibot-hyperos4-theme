@@ -159,14 +159,14 @@ html[data-hyperos4="on"] [class*="rounded"][class*="border"]:not(button):not(a):
 html[data-hyperos4="on"] aside,
 html[data-hyperos4="on"] nav[class*="border"] {
   background: hsl(var(--color-card) / 0.72) !important;
-  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.2)) saturate(1.5);
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 0.9)) saturate(1.4);
   border-color: hsl(var(--color-border) / 0.7) !important;
 }
 
 /* —— 顶部栏 —— */
 html[data-hyperos4="on"] header {
   background: hsl(var(--color-background) / 0.72) !important;
-  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.2)) saturate(1.5);
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 0.9)) saturate(1.4);
 }
 
 /* —— 按钮：轻按反馈 + 主按钮渐变 —— */
@@ -245,7 +245,7 @@ html[data-hyperos4="on"] aside[data-observation-sidebar] {
     hsl(var(--color-card) / 0.86),
     hsl(var(--color-card) / 0.66)
   ) !important;
-  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.4)) saturate(1.7);
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.0)) saturate(1.5);
   border: 1px solid hsl(var(--color-border) / 0.6) !important;
   border-left: none !important;
   border-top: none !important;
@@ -280,7 +280,7 @@ html[data-hyperos4="on"] aside[data-observation-sidebar] a[data-observation-key]
 html[data-hyperos4="on"] header[data-observation-home-head],
 html[data-hyperos4="on"] body > div > header {
   background: hsl(var(--color-background) / 0.7) !important;
-  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.3)) saturate(1.6);
+  backdrop-filter: blur(calc(var(--hyperos4-blur) * 1.0)) saturate(1.5);
   border-bottom: 1px solid hsl(var(--color-border) / 0.5) !important;
   position: sticky !important;
   top: 0 !important;
@@ -512,7 +512,7 @@ html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] [data
 /* 侧栏做成独立悬浮面板 */
 html[data-hyperos4="on"] aside[data-observation-sidebar] {
   background: hsl(var(--color-card) / 0.82) !important;
-  backdrop-filter: blur(28px) saturate(1.7) !important;
+  backdrop-filter: blur(18px) saturate(1.5) !important;
   border: 1px solid hsl(var(--color-border) / 0.45) !important;
   border-radius: 28px !important;
   margin: 12px 0 12px 12px !important;
@@ -1193,4 +1193,15 @@ html[data-hyperos4="on"][data-hyperos4-scrolling="on"] header,
 html[data-hyperos4="on"][data-hyperos4-scrolling="on"] nav[class*="border"],
 html[data-hyperos4="on"][data-hyperos4-scrolling="on"] #hyperos4-dock {
   backdrop-filter: none !important;
+}
+
+/* 6.6.5：尊重系统减弱动效设置 */
+@media (prefers-reduced-motion: reduce) {
+  html[data-hyperos4="on"] *,
+  html[data-hyperos4="on"] *::before,
+  html[data-hyperos4="on"] *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

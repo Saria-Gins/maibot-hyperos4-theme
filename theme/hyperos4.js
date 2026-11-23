@@ -31,11 +31,11 @@
     enabled: true,
     accent: 'blue',
     radius: 26,
-    blur: 18,
+    blur: 14,
     tint: 100,
     dockEnabled: true,
     dockGlass: true,
-    dockBlur: 24,
+    dockBlur: 18,
   }
 
   function clamp(value, min, max, fallback) {
