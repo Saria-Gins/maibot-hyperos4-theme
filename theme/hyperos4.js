@@ -524,10 +524,17 @@
   }
 
   var typeDone = typeof WeakSet === 'function' ? new WeakSet() : null
+  /* 节点预算：市场页那种上万个节点的页面直接跳过，避免切换时长时间阻塞 */
+  var TYPE_MAX_NODES = 3000
 
   function normalizeType() {
     if (!active()) return
     var nodes = document.querySelectorAll('body *')
+    if (nodes.length > TYPE_MAX_NODES) return
+
+    /* 第一遍只读：收集需要改的元素，不写样式，避免读写交替触发重排 */
+    var pendingElements = []
+    var pendingSizes = []
     for (var i = 0; i < nodes.length; i++) {
       var el = nodes[i]
       if (typeDone && typeDone.has(el)) continue
@@ -541,15 +548,22 @@
         continue
       }
       if (typeDone) typeDone.add(el)
-      var cs = getComputedStyle(el)
-      var size = parseFloat(cs.fontSize)
+      var size = parseFloat(getComputedStyle(el).fontSize)
       if (!isFinite(size) || size <= 0) continue
       // 超过 30px 的多为展示性大数字/标题，保持原样
       if (size >= 30) continue
       var target = snapTypeSize(size)
       if (Math.abs(target - size) < 0.6) continue
-      el.style.setProperty('font-size', target + 'px', 'important')
-      el.style.setProperty('line-height', target <= 14 ? '1.55' : '1.4', 'important')
+      pendingElements.push(el)
+      pendingSizes.push(target)
+    }
+
+    /* 第二遍只写：不再读取样式 */
+    for (var j = 0; j < pendingElements.length; j++) {
+      var node = pendingElements[j]
+      var px = pendingSizes[j]
+      node.style.setProperty('font-size', px + 'px', 'important')
+      node.style.setProperty('line-height', px <= 14 ? '1.55' : '1.4', 'important')
     }
   }
 
@@ -590,6 +604,8 @@
   /* 标记主色底容器与右侧大弹层，交给 CSS 统一处理 */
   function markOverlays() {
     if (!active()) return
+    /* 超大页面（市场页 2 万+ 节点）跳过，避免每次调度都全量扫描主色元素 */
+    if (document.getElementsByTagName('*').length > TYPE_MAX_NODES) return
 
     var nodes = document.querySelectorAll(
       '[class*="bg-primary"]:not([data-hyperos4-on-primary]), [data-state="selected"]:not([data-hyperos4-on-primary]), [aria-selected="true"][role="option"]:not([data-hyperos4-on-primary])'

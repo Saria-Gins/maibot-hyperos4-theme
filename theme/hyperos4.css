@@ -147,7 +147,7 @@ html.dark:not([data-hyperos4="off"]) body {
 
 /* —— 卡片与面板：半透明磨砂 —— */
 /* 只给浮层做磨砂；普通卡片用实色，避免大面积 backdrop-filter 拖慢滚动 */
-html[data-hyperos4="on"] [class*="bg-popover"] {
+html[data-hyperos4="on"] [class~="bg-popover"] {
   backdrop-filter: blur(calc(var(--hyperos4-blur) * 0.6)) saturate(1.4);
 }
 
@@ -289,15 +289,15 @@ html[data-hyperos4="on"] body > div > header {
 }
 
 /* 卡片：无硬边框、大圆角、悬浮 */
-html[data-hyperos4="on"] main [class*="rounded-2xl"],
-html[data-hyperos4="on"] main [class*="rounded-xl"] {
+html[data-hyperos4="on"] main [class~="rounded-2xl"],
+html[data-hyperos4="on"] main [class~="rounded-xl"] {
   border-radius: var(--visual-radius-lg) !important;
   box-shadow: var(--visual-shadow-md) !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
-html[data-hyperos4="on"] main [class*="rounded-2xl"]:hover,
-html[data-hyperos4="on"] main [class*="rounded-xl"]:hover {
+html[data-hyperos4="on"] main [class~="rounded-2xl"]:hover,
+html[data-hyperos4="on"] main [class~="rounded-xl"]:hover {
   transform: translateY(-2px);
   box-shadow: var(--visual-shadow-lg) !important;
 }
@@ -315,14 +315,14 @@ html[data-hyperos4="on"] [data-dashboard-button][class*="bg-primary"] {
 }
 
 /* 主页指标数字：更厚重的字形 */
-html[data-hyperos4="on"] main [class*="text-3xl"],
-html[data-hyperos4="on"] main [class*="text-4xl"] {
+html[data-hyperos4="on"] main [class~="text-3xl"],
+html[data-hyperos4="on"] main [class~="text-4xl"] {
   font-weight: 680 !important;
   letter-spacing: -0.01em;
 }
 
 /* 聊天气泡 */
-html[data-hyperos4="on"] [class*="rounded-2xl"][class*="bg-primary"] {
+html[data-hyperos4="on"] [class~="rounded-2xl"][class*="bg-primary"] {
   background-image: var(--color-primary-gradient) !important;
   border-radius: calc(var(--visual-radius-md) * 1.05) !important;
 }
@@ -401,8 +401,8 @@ html[data-hyperos4="on"] h3 {
 }
 
 /* 数字等宽，仪表盘更整齐 */
-html[data-hyperos4="on"] main [class*="text-3xl"],
-html[data-hyperos4="on"] main [class*="text-4xl"],
+html[data-hyperos4="on"] main [class~="text-3xl"],
+html[data-hyperos4="on"] main [class~="text-4xl"],
 html[data-hyperos4="on"] [data-observation-usage-small] {
   font-weight: 600 !important;
   font-variant-numeric: tabular-nums;
@@ -410,8 +410,8 @@ html[data-hyperos4="on"] [data-observation-usage-small] {
 }
 
 /* 卡片：纯白、无硬边、大圆角 */
-html[data-hyperos4="on"] main [class*="rounded-2xl"],
-html[data-hyperos4="on"] main [class*="rounded-xl"] {
+html[data-hyperos4="on"] main [class~="rounded-2xl"],
+html[data-hyperos4="on"] main [class~="rounded-xl"] {
   border-radius: var(--visual-radius-lg) !important;
   border-color: hsl(var(--color-border) / 0.45) !important;
   background-color: hsl(var(--color-card)) !important;
@@ -432,8 +432,8 @@ html[data-hyperos4="on"] [data-dashboard-button][class*="bg-primary"] {
   box-shadow: 0 10px 24px -14px hsl(var(--color-primary) / 0.85) !important;
 }
 
-html[data-hyperos4="on"] [data-dashboard-button][class*="bg-card"],
-html[data-hyperos4="on"] [data-dashboard-button][class*="bg-background"] {
+html[data-hyperos4="on"] [data-dashboard-button][class~="bg-card"],
+html[data-hyperos4="on"] [data-dashboard-button][class~="bg-background"] {
   background-color: hsl(var(--color-muted)) !important;
   border-color: transparent !important;
 }
@@ -475,14 +475,14 @@ html[data-hyperos4="on"] [data-observation-conversations] [data-active="true"] {
 }
 
 /* 分割线更淡 */
-html[data-hyperos4="on"] [class*="border-b"],
-html[data-hyperos4="on"] [class*="border-t"] {
+html[data-hyperos4="on"] [class~="border-b"],
+html[data-hyperos4="on"] [class~="border-t"] {
   border-color: hsl(var(--color-border) / 0.55) !important;
 }
 
 /* 深色模式下的表面 */
-html[data-hyperos4="on"].dark main [class*="rounded-2xl"],
-html[data-hyperos4="on"].dark main [class*="rounded-xl"] {
+html[data-hyperos4="on"].dark main [class~="rounded-2xl"],
+html[data-hyperos4="on"].dark main [class~="rounded-xl"] {
   background-color: hsl(240 6% 10%) !important;
 }
 
@@ -494,7 +494,7 @@ html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] {
   box-shadow: none !important;
 }
 
-html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] [class*="font-semibold"] {
+html[data-hyperos4="on"] [data-dashboard-option-card][aria-pressed="true"] [class~="font-semibold"] {
   color: hsl(var(--color-primary)) !important;
 }
 
@@ -643,8 +643,8 @@ html[data-hyperos4="on"] code,
 html[data-hyperos4="on"] kbd,
 html[data-hyperos4="on"] samp,
 html[data-hyperos4="on"] .font-mono,
-html[data-hyperos4="on"] textarea[class*="font-mono"],
-html[data-hyperos4="on"] input[class*="font-mono"] {
+html[data-hyperos4="on"] textarea[class~="font-mono"],
+html[data-hyperos4="on"] input[class~="font-mono"] {
   font-family: var(--typography-font-family-code) !important;
 }
 
@@ -1068,9 +1068,9 @@ html[data-hyperos4="on"] h3 {
 }
 
 /* 2. 卡片：大圆角 + 双层柔和阴影 + 发丝描边 */
-html[data-hyperos4="on"] [class*="rounded-xl"][class*="border"],
-html[data-hyperos4="on"] [class*="rounded-lg"][class*="border"],
-html[data-hyperos4="on"] [class*="rounded-2xl"][class*="border"] {
+html[data-hyperos4="on"] [class~="rounded-xl"][class*="border"],
+html[data-hyperos4="on"] [class~="rounded-lg"][class*="border"],
+html[data-hyperos4="on"] [class~="rounded-2xl"][class*="border"] {
   border-radius: 22px !important;
   border-color: hsl(var(--color-border) / 0.55) !important;
   background-color: hsl(var(--color-card)) !important;
@@ -1080,22 +1080,22 @@ html[data-hyperos4="on"] [class*="rounded-2xl"][class*="border"] {
 }
 
 /* 卡片内嵌小卡（学习页那种 p-3 的小块）不要重复堆阴影 */
-html[data-hyperos4="on"] [class*="rounded-lg"][class*="border"][class*="p-3"] {
+html[data-hyperos4="on"] [class~="rounded-lg"][class*="border"][class~="p-3"] {
   border-radius: 16px !important;
   background-color: hsl(var(--color-card)) !important;
   box-shadow: none !important;
 }
 
 /* 3. 控件：按钮更圆、输入框更柔 */
-html[data-hyperos4="on"] button[class*="rounded-md"],
-html[data-hyperos4="on"] a[class*="rounded-md"] {
+html[data-hyperos4="on"] button[class~="rounded-md"],
+html[data-hyperos4="on"] a[class~="rounded-md"] {
   border-radius: 14px !important;
   transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease !important;
 }
 
 html[data-hyperos4="on"] input:not([type="checkbox"]):not([type="radio"]),
 html[data-hyperos4="on"] textarea,
-html[data-hyperos4="on"] [class*="rounded-md"][class*="border"][role="combobox"] {
+html[data-hyperos4="on"] [class~="rounded-md"][class*="border"][role="combobox"] {
   border-radius: 14px !important;
   border-color: hsl(var(--color-border) / 0.7) !important;
   background-color: hsl(var(--color-card)) !important;
@@ -1131,7 +1131,7 @@ html[data-hyperos4="on"] [role="tablist"] [role="tab"][aria-selected="true"] {
 }
 
 /* 5. 列表：行悬停染色 + 发丝分隔 */
-html[data-hyperos4="on"] tr[class*="border-b"] {
+html[data-hyperos4="on"] tr[class~="border-b"] {
   border-color: hsl(var(--color-border) / 0.45) !important;
 }
 
@@ -1141,15 +1141,15 @@ html[data-hyperos4="on"] li[class*="hover:bg"]:hover {
 }
 
 /* 6. 徽标 / 状态点：统一胶囊与小圆点 */
-html[data-hyperos4="on"] [class*="rounded-full"][class*="border"][class*="px-"] {
+html[data-hyperos4="on"] [class~="rounded-full"][class*="border"][class*="px-"] {
   border-color: hsl(var(--color-border) / 0.6) !important;
   background-color: hsl(var(--color-muted) / 0.7) !important;
 }
 
 /* 7. 数字：等宽，统计更整齐 */
-html[data-hyperos4="on"] [class*="tabular-nums"],
-html[data-hyperos4="on"] [class*="text-2xl"],
-html[data-hyperos4="on"] [class*="text-3xl"] {
+html[data-hyperos4="on"] [class~="tabular-nums"],
+html[data-hyperos4="on"] [class~="text-2xl"],
+html[data-hyperos4="on"] [class~="text-3xl"] {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
@@ -1183,8 +1183,8 @@ html[data-hyperos4="on"] :focus-visible {
 
 /* 10. 分裂线：统一发丝色 */
 html[data-hyperos4="on"] hr,
-html[data-hyperos4="on"] [class*="border-t"],
-html[data-hyperos4="on"] [class*="border-b"] {
+html[data-hyperos4="on"] [class~="border-t"],
+html[data-hyperos4="on"] [class~="border-b"] {
   border-color: hsl(var(--color-border) / 0.5);
 }
 
@@ -1251,7 +1251,7 @@ html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] textarea {
 }
 
 /* 列表勾选行：淡主色底 + 淡主色描边，文字保持前景色，肉眼可读 */
-html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] {
+html[data-hyperos4="on"] button[class*="bg-primary/"][class~="border-primary"] {
   background-image: none !important;
   background-color: hsl(var(--color-primary) / 0.12) !important;
   border-color: hsl(var(--color-primary) / 0.35) !important;
@@ -1259,15 +1259,15 @@ html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] {
   color: hsl(var(--color-foreground)) !important;
 }
 
-html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] *:not(svg):not(path) {
+html[data-hyperos4="on"] button[class*="bg-primary/"][class~="border-primary"] *:not(svg):not(path) {
   color: inherit !important;
 }
 
-html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] [class*="text-muted-foreground"] {
+html[data-hyperos4="on"] button[class*="bg-primary/"][class~="border-primary"] [class~="text-muted-foreground"] {
   color: hsl(var(--color-foreground) / 0.62) !important;
 }
 
-html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] svg {
+html[data-hyperos4="on"] button[class*="bg-primary/"][class~="border-primary"] svg {
   color: hsl(var(--color-primary)) !important;
   stroke: currentColor !important;
 }
