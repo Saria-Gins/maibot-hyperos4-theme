@@ -180,7 +180,8 @@ html[data-hyperos4="on"] a[role="button"]:active {
   transform: scale(0.972);
 }
 
-html[data-hyperos4="on"] button[class*="bg-primary"]:not([data-dashboard-option-card]):not([role="switch"]) {
+/* 仅真正的操作按钮用实心渐变；列表行（bg-primary/* 透明度类）保持淡底 */
+html[data-hyperos4="on"] button[class*="bg-primary"]:not([class*="bg-primary/"]):not([data-dashboard-option-card]):not([role="switch"]) {
   background-image: var(--color-primary-gradient) !important;
   border-color: transparent !important;
   box-shadow: 0 8px 20px -10px hsl(var(--color-primary) / 0.8) !important;
@@ -1249,18 +1250,24 @@ html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] textarea {
   border-radius: 12px !important;
 }
 
-/* 列表里「勾选 / 选中」的行：保持主色实心底，文字与图标统一转白（对齐学习页） */
-html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"],
+/* 列表勾选行：淡主色底 + 淡主色描边，文字保持前景色，肉眼可读 */
+html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] {
+  background-image: none !important;
+  background-color: hsl(var(--color-primary) / 0.12) !important;
+  border-color: hsl(var(--color-primary) / 0.35) !important;
+  box-shadow: none !important;
+  color: hsl(var(--color-foreground)) !important;
+}
+
 html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] *:not(svg):not(path) {
-  color: hsl(var(--color-primary-foreground)) !important;
+  color: inherit !important;
+}
+
+html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] [class*="text-muted-foreground"] {
+  color: hsl(var(--color-foreground) / 0.62) !important;
 }
 
 html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] svg {
-  color: hsl(var(--color-primary-foreground)) !important;
+  color: hsl(var(--color-primary)) !important;
   stroke: currentColor !important;
-  opacity: 0.9;
-}
-
-html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] {
-  border-color: transparent !important;
 }
