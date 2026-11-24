@@ -1248,3 +1248,19 @@ html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] input,
 html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] textarea {
   border-radius: 12px !important;
 }
+
+/* 列表里「勾选 / 选中」的行：保持主色实心底，文字与图标统一转白（对齐学习页） */
+html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"],
+html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] *:not(svg):not(path) {
+  color: hsl(var(--color-primary-foreground)) !important;
+}
+
+html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] svg {
+  color: hsl(var(--color-primary-foreground)) !important;
+  stroke: currentColor !important;
+  opacity: 0.9;
+}
+
+html[data-hyperos4="on"] button[class*="bg-primary/"][class*="border-primary"] {
+  border-color: transparent !important;
+}
