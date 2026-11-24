@@ -1205,3 +1205,46 @@ html[data-hyperos4="on"][data-hyperos4-scrolling="on"] #hyperos4-dock {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* ===== 选中态可读性 & 弹层风格（6.6.6） ===== */
+
+/* Radix 列表选中态：文字统一用前景色 */
+html[data-hyperos4="on"] [data-state="selected"],
+html[data-hyperos4="on"] [data-state="selected"] *,
+html[data-hyperos4="on"] [aria-selected="true"][role="option"],
+html[data-hyperos4="on"] [aria-selected="true"][role="option"] * {
+  color: hsl(var(--color-primary-foreground)) !important;
+}
+
+
+/* 主色底容器：文字与图标统一用主色前景色，避免深色字压在蓝底上 */
+html[data-hyperos4="on"] [data-hyperos4-on-primary="true"],
+html[data-hyperos4="on"] [data-hyperos4-on-primary="true"] * {
+  color: hsl(var(--color-primary-foreground)) !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-on-primary="true"] svg {
+  color: hsl(var(--color-primary-foreground)) !important;
+  stroke: currentColor !important;
+}
+
+html[data-hyperos4="on"] [data-hyperos4-on-primary="true"] * {
+  border-color: hsl(var(--color-primary-foreground) / 0.35) !important;
+}
+
+/* 右侧大弹层：HyperOS 圆角 + 玻璃底 + 细描边 */
+html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] {
+  border-radius: 24px !important;
+  border: 1px solid hsl(var(--color-border) / 0.6) !important;
+  background-color: hsl(var(--color-card) / 0.96) !important;
+  backdrop-filter: blur(14px) saturate(1.4) !important;
+  box-shadow:
+    0 1px 2px hsl(var(--color-foreground) / 0.05),
+    0 24px 60px -32px hsl(var(--color-foreground) / 0.45) !important;
+  overflow: hidden !important;
+}
+
+html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] input,
+html[data-hyperos4="on"] [role="dialog"][data-hyperos4-sheet="true"] textarea {
+  border-radius: 12px !important;
+}

@@ -576,11 +576,43 @@
     if (routeChanged || now - lastPagerAt > 1200) {
       lastPagerAt = now
       markPager()
+    markOverlays()
+      markOverlays()
       buildNumberPager()
     }
     if (routeChanged || now - lastNormalizeAt > 2500) {
       lastNormalizeAt = now
       idleRun(normalizeType)
+    }
+  }
+
+
+  /* 标记主色底容器与右侧大弹层，交给 CSS 统一处理 */
+  function markOverlays() {
+    if (!active()) return
+
+    var nodes = document.querySelectorAll(
+      '[class*="bg-primary"]:not([data-hyperos4-on-primary]), [data-state="selected"]:not([data-hyperos4-on-primary]), [aria-selected="true"][role="option"]:not([data-hyperos4-on-primary])'
+    )
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i]
+      var bg = getComputedStyle(el).backgroundColor
+      var m = bg.match(/rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?/)
+      if (!m) continue
+      var r = +m[1], g = +m[2], b = +m[3]
+      var a = m[4] === undefined ? 1 : parseFloat(m[4])
+      if (a < 0.5) continue
+      if (b > 150 && b - r > 40) el.setAttribute('data-hyperos4-on-primary', 'true')
+    }
+
+    var dialogs = document.querySelectorAll('[role="dialog"]')
+    for (var d = 0; d < dialogs.length; d++) {
+      var panel = dialogs[d]
+      if (panel.getAttribute('data-hyperos4-sheet')) continue
+      var box = panel.getBoundingClientRect()
+      if (box.width > 320 && box.width < 900 && box.height > 320) {
+        panel.setAttribute('data-hyperos4-sheet', 'true')
+      }
     }
   }
 
